@@ -83,7 +83,7 @@
   bool success = [sessionInstance setCategory:AVAudioSessionCategoryPlayAndRecord error:&error];
   if (!success) NSLog(@"Error setting AVAudioSession category! %@\n", [error localizedDescription]);
   
-  double hwSampleRate = 44100.0;
+  double hwSampleRate = 16000.0;
   success = [sessionInstance setPreferredSampleRate:hwSampleRate error:&error];
   if (!success) NSLog(@"Error setting preferred sample rate! %@\n", [error localizedDescription]);
   
@@ -109,7 +109,8 @@
   AVAudioFormat *inputFormat = [input outputFormatForBus:0];
   [_engine connect:input to:_downMixer format:inputFormat];
   
-  AVAudioFormat *outputFormat = [[AVAudioFormat alloc] initStandardFormatWithSampleRate:44100.0 channels:2];
+  AVAudioFormat *outputFormat = [[AVAudioFormat alloc] initWithCommonFormat:AVAudioPCMFormatFloat32 sampleRate:16000 channels:1 interleaved:NO];
+
   [_engine connect:_downMixer to:[_engine mainMixerNode] format:outputFormat];
 }
 
@@ -127,7 +128,6 @@
   
   if (!_mixerOutputFileURL) _mixerOutputFileURL = [NSURL URLWithString:[NSTemporaryDirectory() stringByAppendingString:@"mixerOutput.caf"]];
   
-//  AVAudioNode *mixerNode = [_engine inputNode];
   AVAudioNode *mixerNode = _downMixer;
   NSDictionary *settings = [[mixerNode outputFormatForBus:0] settings];
   
