@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		631C94F6613F2AD74774F04C /* Pods_AVAudioEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFCD3A0B16CEE65CEFC53482 /* Pods_AVAudioEngine.framework */; };
+		6582C30A22E8698D00748F62 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6582C30922E8698C00748F62 /* Extensions.swift */; };
 		65FADC4522DDBED10026F5E0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FADC4422DDBED10026F5E0 /* AppDelegate.swift */; };
 		65FADC4722DDBED10026F5E0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FADC4622DDBED10026F5E0 /* ViewController.swift */; };
 		65FADC4A22DDBED10026F5E0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65FADC4822DDBED10026F5E0 /* Main.storyboard */; };
@@ -43,6 +44,7 @@
 		1D340E3E4815F46ED18B6A13 /* Pods-AVAudioEngineTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AVAudioEngineTests.release.xcconfig"; path = "Target Support Files/Pods-AVAudioEngineTests/Pods-AVAudioEngineTests.release.xcconfig"; sourceTree = "<group>"; };
 		3E13B20C42D62E14EE31BB48 /* Pods-AVAudioEngineTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AVAudioEngineTests.debug.xcconfig"; path = "Target Support Files/Pods-AVAudioEngineTests/Pods-AVAudioEngineTests.debug.xcconfig"; sourceTree = "<group>"; };
 		4EF297EEC91BBDA1CA6F4DE2 /* Pods-AVAudioEngine.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AVAudioEngine.release.xcconfig"; path = "Target Support Files/Pods-AVAudioEngine/Pods-AVAudioEngine.release.xcconfig"; sourceTree = "<group>"; };
+		6582C30922E8698C00748F62 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		65FADC4122DDBED10026F5E0 /* AVAudioEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AVAudioEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65FADC4422DDBED10026F5E0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		65FADC4622DDBED10026F5E0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 				65FADC7322DDE52C0026F5E0 /* RecordingManager.h */,
 				65FADC7422DDE52C0026F5E0 /* RecordingManager.m */,
 				65FADC7222DDE52C0026F5E0 /* AVAudioEngine-Bridging-Header.h */,
+				6582C30922E8698C00748F62 /* Extensions.swift */,
 			);
 			path = AVAudioEngine;
 			sourceTree = "<group>";
@@ -169,7 +172,6 @@
 				C287FDE882BDBDCB95048140 /* Pods-AVAudioEngineUITests.debug.xcconfig */,
 				7FD2692B9451C848DF1112BC /* Pods-AVAudioEngineUITests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -403,6 +405,7 @@
 				65FADC7522DDE52C0026F5E0 /* RecordingManager.m in Sources */,
 				65FADC4722DDBED10026F5E0 /* ViewController.swift in Sources */,
 				65FADC4522DDBED10026F5E0 /* AppDelegate.swift in Sources */,
+				6582C30A22E8698D00748F62 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
