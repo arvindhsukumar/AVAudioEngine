@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		631C94F6613F2AD74774F04C /* Pods_AVAudioEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFCD3A0B16CEE65CEFC53482 /* Pods_AVAudioEngine.framework */; };
+		655D137C22E9B4D40021C46A /* libFLACiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 655D137A22E9B4D40021C46A /* libFLACiOS.a */; };
+		655D137D22E9B4D40021C46A /* FLACiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 655D137B22E9B4D40021C46A /* FLACiOS.framework */; };
+		655D138022E9BF410021C46A /* encode_single_16bit.c in Sources */ = {isa = PBXBuildFile; fileRef = 655D137F22E9BF410021C46A /* encode_single_16bit.c */; };
 		6582C30A22E8698D00748F62 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6582C30922E8698C00748F62 /* Extensions.swift */; };
 		65FADC4522DDBED10026F5E0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FADC4422DDBED10026F5E0 /* AppDelegate.swift */; };
 		65FADC4722DDBED10026F5E0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FADC4622DDBED10026F5E0 /* ViewController.swift */; };
@@ -44,6 +47,10 @@
 		1D340E3E4815F46ED18B6A13 /* Pods-AVAudioEngineTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AVAudioEngineTests.release.xcconfig"; path = "Target Support Files/Pods-AVAudioEngineTests/Pods-AVAudioEngineTests.release.xcconfig"; sourceTree = "<group>"; };
 		3E13B20C42D62E14EE31BB48 /* Pods-AVAudioEngineTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AVAudioEngineTests.debug.xcconfig"; path = "Target Support Files/Pods-AVAudioEngineTests/Pods-AVAudioEngineTests.debug.xcconfig"; sourceTree = "<group>"; };
 		4EF297EEC91BBDA1CA6F4DE2 /* Pods-AVAudioEngine.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AVAudioEngine.release.xcconfig"; path = "Target Support Files/Pods-AVAudioEngine/Pods-AVAudioEngine.release.xcconfig"; sourceTree = "<group>"; };
+		655D137A22E9B4D40021C46A /* libFLACiOS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFLACiOS.a; sourceTree = "<group>"; };
+		655D137B22E9B4D40021C46A /* FLACiOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FLACiOS.framework; sourceTree = "<group>"; };
+		655D137E22E9BF410021C46A /* encode_single_16bit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = encode_single_16bit.h; sourceTree = "<group>"; };
+		655D137F22E9BF410021C46A /* encode_single_16bit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = encode_single_16bit.c; sourceTree = "<group>"; };
 		6582C30922E8698C00748F62 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		65FADC4122DDBED10026F5E0 /* AVAudioEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AVAudioEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65FADC4422DDBED10026F5E0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -72,7 +79,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				655D137D22E9B4D40021C46A /* FLACiOS.framework in Frameworks */,
 				631C94F6613F2AD74774F04C /* Pods_AVAudioEngine.framework in Frameworks */,
+				655D137C22E9B4D40021C46A /* libFLACiOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,12 +114,24 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		655D137922E9B4D40021C46A /* FLAC */ = {
+			isa = PBXGroup;
+			children = (
+				655D137F22E9BF410021C46A /* encode_single_16bit.c */,
+				655D137E22E9BF410021C46A /* encode_single_16bit.h */,
+				655D137A22E9B4D40021C46A /* libFLACiOS.a */,
+				655D137B22E9B4D40021C46A /* FLACiOS.framework */,
+			);
+			path = FLAC;
+			sourceTree = "<group>";
+		};
 		65FADC3822DDBED10026F5E0 = {
 			isa = PBXGroup;
 			children = (
 				65FADC4322DDBED10026F5E0 /* AVAudioEngine */,
 				65FADC5822DDBED20026F5E0 /* AVAudioEngineTests */,
 				65FADC6322DDBED20026F5E0 /* AVAudioEngineUITests */,
+				655D137922E9B4D40021C46A /* FLAC */,
 				65FADC4222DDBED10026F5E0 /* Products */,
 				9666484D0352DB4285409312 /* Pods */,
 				5ACE47A0B8FA33777D6252AB /* Frameworks */,
@@ -405,6 +426,7 @@
 				65FADC7522DDE52C0026F5E0 /* RecordingManager.m in Sources */,
 				65FADC4722DDBED10026F5E0 /* ViewController.swift in Sources */,
 				65FADC4522DDBED10026F5E0 /* AppDelegate.swift in Sources */,
+				655D138022E9BF410021C46A /* encode_single_16bit.c in Sources */,
 				6582C30A22E8698D00748F62 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -584,10 +606,18 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 72H8ZPD4X8;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/FLAC",
+				);
 				INFOPLIST_FILE = AVAudioEngine/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/FLAC",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.arvindh.AVAudioEngine;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -606,10 +636,18 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 72H8ZPD4X8;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/FLAC",
+				);
 				INFOPLIST_FILE = AVAudioEngine/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/FLAC",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.arvindh.AVAudioEngine;
 				PRODUCT_NAME = "$(TARGET_NAME)";
