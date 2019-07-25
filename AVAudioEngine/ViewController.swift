@@ -116,7 +116,7 @@ class ViewController: UIViewController {
   }
   
   @objc func playRecording() {
-    let url = URL(string: NSTemporaryDirectory().appending("mixerOutput.caf"))!
+    let url = URL(string: NSTemporaryDirectory().appending("mixerOutput.flac"))!
 //    audioFile = try! AVAudioFile(forReading: url)
 //
 //    setupEngine()

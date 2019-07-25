@@ -8,6 +8,8 @@
 
 #import "RecordingManager.h"
 #import <AVFoundation/AVFoundation.h>
+#import <FLACiOS/all.h>
+#import "encode_single_16bit.h"
 
 @interface RecordingManager() {
   // AVAudioEngine and AVAudioNodes
@@ -23,6 +25,7 @@
   // mananging session and configuration changes
   BOOL                    _isSessionInterrupted;
   BOOL                    _isConfigChangePending;
+  NSMutableData           *recordingData;
 }
 
 - (void)handleInterruption:(NSNotification *)notification;
@@ -83,7 +86,7 @@
   bool success = [sessionInstance setCategory:AVAudioSessionCategoryPlayAndRecord error:&error];
   if (!success) NSLog(@"Error setting AVAudioSession category! %@\n", [error localizedDescription]);
   
-  double hwSampleRate = 16000.0;
+  double hwSampleRate = 44100.0;
   success = [sessionInstance setPreferredSampleRate:hwSampleRate error:&error];
   if (!success) NSLog(@"Error setting preferred sample rate! %@\n", [error localizedDescription]);
   
@@ -108,8 +111,8 @@
   AVAudioInputNode *input = [_engine inputNode];
   AVAudioFormat *inputFormat = [input outputFormatForBus:0];
   [_engine connect:input to:_downMixer format:inputFormat];
-  
-  AVAudioFormat *outputFormat = [[AVAudioFormat alloc] initWithCommonFormat:AVAudioPCMFormatFloat32 sampleRate:16000 channels:1 interleaved:NO];
+
+  AVAudioFormat *outputFormat = [[AVAudioFormat alloc] initWithCommonFormat:AVAudioPCMFormatFloat32 sampleRate:44100 channels:2 interleaved:NO];
 
   [_engine connect:_downMixer to:[_engine mainMixerNode] format:outputFormat];
 }
@@ -126,22 +129,32 @@
     [self startEngine];
   }
   
-  if (!_mixerOutputFileURL) _mixerOutputFileURL = [NSURL URLWithString:[NSTemporaryDirectory() stringByAppendingString:@"mixerOutput.caf"]];
+  if (!_mixerOutputFileURL) _mixerOutputFileURL = [NSURL URLWithString:[NSTemporaryDirectory() stringByAppendingString:@"mixerOutput.flac"]];
   
   AVAudioNode *mixerNode = _downMixer;
   NSDictionary *settings = [[mixerNode outputFormatForBus:0] settings];
   
-  NSError *error;
-  AVAudioFile *mixerOutputFile = [[AVAudioFile alloc] initForWriting:_mixerOutputFileURL settings:settings error:&error];
-  NSAssert(mixerOutputFile != nil, @"mixerOutputFile is nil, %@", [error localizedDescription]);
-  
   AVAudioNodeBus bus = 0;
   AVAudioFormat *format = [mixerNode outputFormatForBus:bus];
+  AVAudioFormat *convertFormat = [[AVAudioFormat alloc] initWithCommonFormat:AVAudioPCMFormatInt16 sampleRate:16000 channels:1 interleaved:NO];
+  
+  recordingData = [NSMutableData data];
+  
   
   [mixerNode installTapOnBus:bus bufferSize:1024 format:format block:^(AVAudioPCMBuffer * _Nonnull buffer, AVAudioTime * _Nonnull when) {
-    NSError *error;
-    bool success = [mixerOutputFile writeFromBuffer:buffer error:&error];
-    NSAssert(success, @"error writing buffer data to file, %@", [error localizedDescription]);
+    AVAudioConverter *converter = [[AVAudioConverter alloc] initFromFormat:buffer.format toFormat:convertFormat];
+    AVAudioPCMBuffer *newBuffer = [[AVAudioPCMBuffer alloc] initWithPCMFormat:convertFormat frameCapacity:buffer.frameCapacity];
+    
+    NSError *convertError;
+    [converter convertToBuffer:newBuffer error:&convertError withInputFromBlock:^AVAudioBuffer * _Nullable(AVAudioPacketCount inNumberOfPackets, AVAudioConverterInputStatus * _Nonnull outStatus) {
+      outStatus = AVAudioConverterInputStatus_HaveData;
+      return buffer;
+    }];
+    
+    flacWriterState *outputState = FLAC__encodeSingle16bit(*newBuffer.int16ChannelData, 44100, newBuffer.frameLength);
+    NSData *data = [[NSData alloc] initWithBytes:outputState->data length:outputState->pointer];
+    [recordingData appendData:data];
+    flacWriterStateDes(outputState);
   }];
   
   _isRecording = YES;
@@ -155,6 +168,8 @@
 
     [mixerNode removeTapOnBus:0];
     [_engine stop];
+    NSLog(@"finished recording data of length: %lu", recordingData.length);
+    [[NSFileManager defaultManager] createFileAtPath:_mixerOutputFileURL.path contents:recordingData attributes:nil];
     _isRecording = NO;
   }
 }
