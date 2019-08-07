@@ -10,6 +10,9 @@
 #import <AVFoundation/AVFoundation.h>
 #import <FLACiOS/all.h>
 #import "encode_single_16bit.h"
+#import "WebsocketManager.h"
+
+NSString const *kAccessToken = @"eyJhbGciOiJSUzI1NiIsImtpZCI6IjI4Y2M2MzEyZWVkYjI1MzIwMDQyMjI4MWE4MTQ4N2UyYTkzMjJhOTIiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiQXJ2aW5kaCBTdWt1bWFyIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL2NsaWVudC1kZXYtZTMwMWQiLCJhdWQiOiJjbGllbnQtZGV2LWUzMDFkIiwiYXV0aF90aW1lIjoxNTY0NzQxMTYzLCJ1c2VyX2lkIjoiVTN4RGZUdUQ1ZGZHdll5M3F0U0FSVTkwVldaMiIsInN1YiI6IlUzeERmVHVENWRmR3ZZeTNxdFNBUlU5MFZXWjIiLCJpYXQiOjE1NjQ3NDExNjMsImV4cCI6MTU2NDc0NDc2MywiZW1haWwiOiJhcnZpbmRoQGFicmlkZ2UuYWkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJhcnZpbmRoQGFicmlkZ2UuYWkiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.lWg5JQywZtUIF1T_so98bMSBuiO-xJ3bZ5aq3R4B0eTQjnztZZF-a6AWuPD9VJowUQ0n9KJL8qTUyAKYDs4LPmcL6rV0bD0UX6XMLQOJECdZyLaN0Ne33U7W4R0vM8K8qEN1PC3C8mZqBYt_ntKHta1ZMtuMMorpOtU-4Fym8flll8Pk2NTGwi7v-Alx1yacSEh74Hi6sne5DW31_UH6o8vf4w_GTZYwtgH1aLPQ-L4umJIJjyUaVCJ2-LKN4MTCLpCobZE-Y6nCMhxkGTfnabUHEPTRwaTY2pqN62pqB64QnCq2MAtn341cnkijesDesf9jPA4Ik4EfVm6LBqvl9Q";
 
 @interface RecordingManager() {
   // AVAudioEngine and AVAudioNodes
@@ -26,6 +29,8 @@
   BOOL                    _isSessionInterrupted;
   BOOL                    _isConfigChangePending;
   NSMutableData           *recordingData;
+  
+  WebsocketManager *websocketManager;
 }
 
 - (void)handleInterruption:(NSNotification *)notification;
@@ -49,10 +54,16 @@
   if (self = [super init]) {
     // write your code here
     NSLog(@"%@", @"init shared instance");
+    [self setupWebsocket];
     [self setupSession];
     [self setupEngine];
   }
   return self;
+}
+
+-(void)setupWebsocket {
+  websocketManager = [[WebsocketManager alloc] initWithAccessToken: kAccessToken];
+  [websocketManager connect];
 }
 
 -(void)setupEngine {
@@ -153,7 +164,10 @@
     
     flacWriterState *outputState = FLAC__encodeSingle16bit(*newBuffer.int16ChannelData, 44100, newBuffer.frameLength);
     NSData *data = [[NSData alloc] initWithBytes:outputState->data length:outputState->pointer];
-    [recordingData appendData:data];
+    
+    [self->websocketManager sendData:data];    
+    [self->recordingData appendData:data];
+    
     flacWriterStateDes(outputState);
   }];
   

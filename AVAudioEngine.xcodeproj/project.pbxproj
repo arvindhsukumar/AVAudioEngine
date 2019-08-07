@@ -11,6 +11,7 @@
 		655D137C22E9B4D40021C46A /* libFLACiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 655D137A22E9B4D40021C46A /* libFLACiOS.a */; };
 		655D137D22E9B4D40021C46A /* FLACiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 655D137B22E9B4D40021C46A /* FLACiOS.framework */; };
 		655D138022E9BF410021C46A /* encode_single_16bit.c in Sources */ = {isa = PBXBuildFile; fileRef = 655D137F22E9BF410021C46A /* encode_single_16bit.c */; };
+		655D138322E9D7C70021C46A /* WebsocketManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 655D138222E9D7C70021C46A /* WebsocketManager.m */; };
 		6582C30A22E8698D00748F62 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6582C30922E8698C00748F62 /* Extensions.swift */; };
 		65FADC4522DDBED10026F5E0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FADC4422DDBED10026F5E0 /* AppDelegate.swift */; };
 		65FADC4722DDBED10026F5E0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FADC4622DDBED10026F5E0 /* ViewController.swift */; };
@@ -51,6 +52,8 @@
 		655D137B22E9B4D40021C46A /* FLACiOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FLACiOS.framework; sourceTree = "<group>"; };
 		655D137E22E9BF410021C46A /* encode_single_16bit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = encode_single_16bit.h; sourceTree = "<group>"; };
 		655D137F22E9BF410021C46A /* encode_single_16bit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = encode_single_16bit.c; sourceTree = "<group>"; };
+		655D138122E9D7C70021C46A /* WebsocketManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebsocketManager.h; sourceTree = "<group>"; };
+		655D138222E9D7C70021C46A /* WebsocketManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebsocketManager.m; sourceTree = "<group>"; };
 		6582C30922E8698C00748F62 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		65FADC4122DDBED10026F5E0 /* AVAudioEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AVAudioEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65FADC4422DDBED10026F5E0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -159,6 +162,8 @@
 				65FADC5022DDBED20026F5E0 /* Info.plist */,
 				65FADC7322DDE52C0026F5E0 /* RecordingManager.h */,
 				65FADC7422DDE52C0026F5E0 /* RecordingManager.m */,
+				655D138122E9D7C70021C46A /* WebsocketManager.h */,
+				655D138222E9D7C70021C46A /* WebsocketManager.m */,
 				65FADC7222DDE52C0026F5E0 /* AVAudioEngine-Bridging-Header.h */,
 				6582C30922E8698C00748F62 /* Extensions.swift */,
 			);
@@ -360,12 +365,14 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-AVAudioEngine/Pods-AVAudioEngine-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
+				"${BUILT_PRODUCTS_DIR}/SocketRocket/SocketRocket.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketRocket.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -424,6 +431,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				65FADC7522DDE52C0026F5E0 /* RecordingManager.m in Sources */,
+				655D138322E9D7C70021C46A /* WebsocketManager.m in Sources */,
 				65FADC4722DDBED10026F5E0 /* ViewController.swift in Sources */,
 				65FADC4522DDBED10026F5E0 /* AppDelegate.swift in Sources */,
 				655D138022E9BF410021C46A /* encode_single_16bit.c in Sources */,
