@@ -17,7 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(instancetype)initWithAccessToken:(NSString*)accessToken;
 -(void)connect;
+-(void)start;
 -(void)sendData:(NSData*)data;
+-(void)sendMessage:(NSString*)message;
 
 @end
 

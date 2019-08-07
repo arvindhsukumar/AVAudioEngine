@@ -64,10 +64,16 @@ NSString const *kIPAddress = @"192.168.9.125";
   [_socket send:data];
 }
 
+- (void)sendMessage:(NSString*)message {
+  [_socket send:message];
+}
+
+- (void)start {
+  [_socket send:@"{\"type\": \"start\",\"encounter_id\": \"some_id\",\"user_id\": \"uid\",\"recording_number\": 0}"];
+}
+
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
   NSLog(@"socket opened");
-  [_socket send:@"{\"type\": \"start\",\"encounter_id\": \"some_id\",\"user_id\": \"uid\",\"recording_number\": 0}"];
-
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
@@ -83,7 +89,7 @@ NSString const *kIPAddress = @"192.168.9.125";
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
-  NSLog(@"socket received message: %@", message);
+//  NSLog(@"socket received message: %@", message);
 }
 
 @end

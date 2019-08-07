@@ -13,6 +13,7 @@
 		655D138022E9BF410021C46A /* encode_single_16bit.c in Sources */ = {isa = PBXBuildFile; fileRef = 655D137F22E9BF410021C46A /* encode_single_16bit.c */; };
 		655D138322E9D7C70021C46A /* WebsocketManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 655D138222E9D7C70021C46A /* WebsocketManager.m */; };
 		6582C30A22E8698D00748F62 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6582C30922E8698C00748F62 /* Extensions.swift */; };
+		6598392822FAD05B0052F485 /* Recorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6598392722FAD05B0052F485 /* Recorder.swift */; };
 		65FADC4522DDBED10026F5E0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FADC4422DDBED10026F5E0 /* AppDelegate.swift */; };
 		65FADC4722DDBED10026F5E0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FADC4622DDBED10026F5E0 /* ViewController.swift */; };
 		65FADC4A22DDBED10026F5E0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65FADC4822DDBED10026F5E0 /* Main.storyboard */; };
@@ -55,6 +56,7 @@
 		655D138122E9D7C70021C46A /* WebsocketManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebsocketManager.h; sourceTree = "<group>"; };
 		655D138222E9D7C70021C46A /* WebsocketManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebsocketManager.m; sourceTree = "<group>"; };
 		6582C30922E8698C00748F62 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		6598392722FAD05B0052F485 /* Recorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recorder.swift; sourceTree = "<group>"; };
 		65FADC4122DDBED10026F5E0 /* AVAudioEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AVAudioEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65FADC4422DDBED10026F5E0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		65FADC4622DDBED10026F5E0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -166,6 +168,7 @@
 				655D138222E9D7C70021C46A /* WebsocketManager.m */,
 				65FADC7222DDE52C0026F5E0 /* AVAudioEngine-Bridging-Header.h */,
 				6582C30922E8698C00748F62 /* Extensions.swift */,
+				6598392722FAD05B0052F485 /* Recorder.swift */,
 			);
 			path = AVAudioEngine;
 			sourceTree = "<group>";
@@ -435,6 +438,7 @@
 				65FADC4722DDBED10026F5E0 /* ViewController.swift in Sources */,
 				65FADC4522DDBED10026F5E0 /* AppDelegate.swift in Sources */,
 				655D138022E9BF410021C46A /* encode_single_16bit.c in Sources */,
+				6598392822FAD05B0052F485 /* Recorder.swift in Sources */,
 				6582C30A22E8698D00748F62 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
