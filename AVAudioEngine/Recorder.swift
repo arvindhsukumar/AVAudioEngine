@@ -21,12 +21,17 @@ class Recorder: NSObject {
   
   @objc func setup() {
     engine = AVAudioEngine()
+    downMixer = AVAudioMixerNode()
+    engine.attach(downMixer)
     makeEngineConnections()
   }
   
   @objc func makeEngineConnections() {
     let inputNode = engine.inputNode
-    engine.connect(inputNode, to: engine.mainMixerNode, format: inputNode.outputFormat(forBus: 0))
+    engine.connect(inputNode, to: downMixer, format: inputNode.outputFormat(forBus: 0))
+    
+    let downMixerFormat = AVAudioFormat(commonFormat: AVAudioCommonFormat.pcmFormatFloat32, sampleRate: 44100, channels: 1, interleaved: true)
+    engine.connect(downMixer, to: engine.mainMixerNode, format: downMixerFormat)
   }
   
   @objc func startEngine() {
@@ -44,13 +49,17 @@ class Recorder: NSObject {
       startEngine()
     }
     
-    let mixerNode: AVAudioNode = engine.inputNode
+    let mixerNode: AVAudioNode = downMixer
     let mixerFormat = mixerNode.outputFormat(forBus: 0)
     
-    var outDesc = AudioStreamBasicDescription(
-      mSampleRate: 44100, mFormatID: kAudioFormatFLAC, mFormatFlags: 0,
-      mBytesPerPacket: 0, mFramesPerPacket: 0, mBytesPerFrame: 0,
-      mChannelsPerFrame: 2, mBitsPerChannel: 0, mReserved: 0)
+    var outDesc = AudioStreamBasicDescription()
+    outDesc.mSampleRate = 44100
+    outDesc.mChannelsPerFrame = 1
+    outDesc.mFormatID = kAudioFormatFLAC
+    outDesc.mFramesPerPacket = 1152
+    outDesc.mBitsPerChannel = 24
+    outDesc.mBytesPerPacket = 0
+    
     let outFormat: AVAudioFormat = AVAudioFormat(streamDescription: &outDesc)!
     
     if let c = AVAudioConverter(from: mixerFormat, to: outFormat) {
@@ -84,14 +93,13 @@ class Recorder: NSObject {
       
       let audioBuffer = outBuffer.audioBufferList.pointee.mBuffers
       if let mData = audioBuffer.mData {
-        let data: NSData = NSData(bytes: mData, length: Int(audioBuffer.mDataByteSize))
-        print("recorded data of length \(data.length)")
+        let length = Int(audioBuffer.mDataByteSize)
+        let data: NSData = NSData(bytes: mData, length: length)
         completion(data)
       }
       else {
         print("no data in buffer")
       }
-      
     })
     
     isRecording = true
@@ -99,10 +107,10 @@ class Recorder: NSObject {
   
   @objc func stopRecording() {
     if self.isRecording {
-      self.engine.inputNode.removeTap(onBus: 0)
+      let mixerNode: AVAudioNode = downMixer
+      mixerNode.removeTap(onBus: 0)
       self.engine.stop()
       self.isRecording = false
     }
-    
   }
 }

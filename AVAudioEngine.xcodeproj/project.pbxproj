@@ -277,6 +277,11 @@
 					65FADC4022DDBED10026F5E0 = {
 						CreatedOnToolsVersion = 10.2.1;
 						LastSwiftMigration = 1020;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 					65FADC5422DDBED20026F5E0 = {
 						CreatedOnToolsVersion = 10.2.1;
