@@ -89,7 +89,7 @@ NSString const *kIPAddress = @"192.168.9.125";
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
-//  NSLog(@"socket received message: %@", message);
+  NSLog(@"socket received message: %@", message);
 }
 
 @end

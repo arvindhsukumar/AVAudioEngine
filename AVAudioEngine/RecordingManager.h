@@ -14,10 +14,13 @@ NS_ASSUME_NONNULL_BEGIN
 @interface RecordingManager : NSObject
 
 @property (assign, nonatomic) BOOL isRecording;
+@property (assign, nonatomic) BOOL isPaused;
 
 +(instancetype)sharedInstance;
 -(void)startRecording;
 -(void)stopRecording;
+- (void)pauseRecording;
+- (void)resumeRecording;
 
 @end
 

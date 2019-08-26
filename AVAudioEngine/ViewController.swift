@@ -22,6 +22,12 @@ class ViewController: UIViewController {
     return button
   }()
   
+  let stopButton: UIButton = {
+    let button = UIButton(type: UIButton.ButtonType.system)
+    button.setTitle("Stop", for: UIControl.State.normal)
+    return button
+  }()
+  
   let label: UILabel = {
     let label = UILabel()
     label.textAlignment = .center
@@ -45,8 +51,8 @@ class ViewController: UIViewController {
   var audioSampleRate: Float = 0
   var audioLengthSeconds: Float = 0
   var audioLengthSamples: AVAudioFramePosition = 0
-  
-  override func viewDidLoad() {
+
+ override func viewDidLoad() {
     super.viewDidLoad()
     // Do any additional setup after loading the view.
     
@@ -70,15 +76,26 @@ class ViewController: UIViewController {
     
     button.addTarget(self, action: #selector(self.toggleRecording), for: UIControl.Event.touchUpInside)
     
-    view.addSubview(playButton)
-    playButton.snp.makeConstraints { (make) in
+    view.addSubview(stopButton)
+    stopButton.snp.makeConstraints { (make) in
       make.centerX.equalTo(view)
       make.width.equalTo(200)
       make.height.equalTo(44)
       make.top.equalTo(button.snp.bottom).offset(10)
     }
+    stopButton.addTarget(self, action: #selector(self.stopRecording), for: UIControl.Event.touchUpInside)
+    
+    view.addSubview(playButton)
+    playButton.snp.makeConstraints { (make) in
+      make.centerX.equalTo(view)
+      make.width.equalTo(200)
+      make.height.equalTo(44)
+      make.top.equalTo(stopButton.snp.bottom).offset(10)
+    }
     
     playButton.addTarget(self, action: #selector(self.playRecording), for: UIControl.Event.touchUpInside)
+    
+    
     
     view.addSubview(label)
     label.snp.makeConstraints { (make) in
@@ -97,26 +114,37 @@ class ViewController: UIViewController {
     let format = audioEngine.mainMixerNode.inputFormat(forBus: 0)
     audioEngine.connect(playNode, to: audioEngine.mainMixerNode, format: audioFormat!)
     try! audioEngine.start()
+
   }
   
   func setupRecordingManager() {
     RecordingManager.sharedInstance()
   }
+  
+  @objc func stopRecording() {
+    RecordingManager.sharedInstance().stopRecording()
+  }
 
   @objc func toggleRecording() {
     let manager = RecordingManager.sharedInstance()
     if manager.isRecording {
-      manager.stopRecording()
-      button.setTitle("Record", for: UIControl.State.normal)
+      if button.currentTitle == "Pause" {
+        manager.pauseRecording()
+        button.setTitle("Record", for: UIControl.State.normal)
+      }
+      else {
+        manager.resumeRecording()
+        button.setTitle("Pause", for: UIControl.State.normal)
+      }      
     }
     else {
       manager.startRecording()
-      button.setTitle("Stop", for: UIControl.State.normal)
+      button.setTitle("Pause", for: UIControl.State.normal)
     }
   }
   
   @objc func playRecording() {
-    let url = URL(string: NSTemporaryDirectory().appending("mixerOutput.flac"))!
+    let url = URL(string: NSTemporaryDirectory().appending("mixerOutput.caf"))!
 //    audioFile = try! AVAudioFile(forReading: url)
 //
 //    setupEngine()
@@ -125,7 +153,7 @@ class ViewController: UIViewController {
 //
 //    }
 //    self.playNode.play()
-    
+//
 //    label.text = """
 //      \(audioFormat!) \n
 //      \(audioLengthSeconds) \n

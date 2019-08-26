@@ -12,6 +12,7 @@ class Recorder: NSObject {
   @objc var engine: AVAudioEngine!
   @objc var downMixer: AVAudioMixerNode!
   @objc var isRecording: Bool = false
+  @objc var isPaused: Bool = false
   @objc var converter: AVAudioConverter!
   
   override init() {
@@ -24,13 +25,14 @@ class Recorder: NSObject {
     downMixer = AVAudioMixerNode()
     engine.attach(downMixer)
     makeEngineConnections()
+    engine.prepare()
   }
   
   @objc func makeEngineConnections() {
     let inputNode = engine.inputNode
     engine.connect(inputNode, to: downMixer, format: inputNode.outputFormat(forBus: 0))
     
-    let downMixerFormat = AVAudioFormat(commonFormat: AVAudioCommonFormat.pcmFormatFloat32, sampleRate: 44100, channels: 1, interleaved: true)
+    let downMixerFormat = AVAudioFormat(commonFormat: AVAudioCommonFormat.pcmFormatFloat32, sampleRate: 44100, channels: 1, interleaved: false)
     engine.connect(downMixer, to: engine.mainMixerNode, format: downMixerFormat)
   }
   
@@ -44,11 +46,6 @@ class Recorder: NSObject {
   }
   
   @objc func startRecording(_ completion: @escaping (NSData) -> ()) {
-    if !engine.isRunning {
-      makeEngineConnections()
-      startEngine()
-    }
-    
     let mixerNode: AVAudioNode = downMixer
     let mixerFormat = mixerNode.outputFormat(forBus: 0)
     
@@ -62,47 +59,72 @@ class Recorder: NSObject {
     
     let outFormat: AVAudioFormat = AVAudioFormat(streamDescription: &outDesc)!
     
-    if let c = AVAudioConverter(from: mixerFormat, to: outFormat) {
-      self.converter = c
-    }
-    else {
-      print("error creating converter")
+    if self.converter == nil {
+      if let c = AVAudioConverter(from: mixerFormat, to: outFormat) {
+        self.converter = c
+        self.converter.primeMethod = AVAudioConverterPrimeMethod.pre
+      }
+      else {
+        print("error creating converter")
+      }
     }
     
-    mixerNode.installTap(onBus: 0, bufferSize: 1024, format: mixerFormat, block: {
+    let file = try! AVAudioFile(forWriting: URL(string: NSTemporaryDirectory().appending("mixerOutput.caf"))!, settings: mixerFormat.settings)
+    
+    mixerNode.installTap(onBus: 0, bufferSize: 1152 * 8, format: mixerFormat, block: {
       [weak self] (buffer, time) in
       guard let this = self else {
         return
       }
       
-      let outBuffer = AVAudioCompressedBuffer(
-        format: outFormat,
-        packetCapacity: 8,
-        maximumPacketSize: this.converter.maximumOutputPacketSize)
-      
-      let inputBlock : AVAudioConverterInputBlock = {
-        inNumPackets, outStatus in
+      DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
+        let outBuffer = AVAudioCompressedBuffer(
+          format: outFormat,
+          packetCapacity: 8,
+          maximumPacketSize: this.converter.maximumOutputPacketSize)
         
-        outStatus.pointee = AVAudioConverterInputStatus.haveData;
-        return buffer; // fill and return input buffer
+        let inputBlock : AVAudioConverterInputBlock = {
+          inNumPackets, outStatus in
+          outStatus.pointee = AVAudioConverterInputStatus.haveData;
+          return buffer; // fill and return input buffer
+        }
+        
+        // Conversion loop
+        var outError: NSError? = nil
+        this.converter.convert(to: outBuffer, error: &outError, withInputFrom: inputBlock)
+        
+        let audioBuffer = outBuffer.audioBufferList.pointee.mBuffers
+        if let mData = audioBuffer.mData {
+          let length = Int(audioBuffer.mDataByteSize)
+          let data: NSData = NSData(bytes: mData, length: length)
+          DispatchQueue.main.async {
+            try! file.write(from: buffer)
+            completion(data)
+          }
+        }
+        else {
+          print("no data in buffer")
+        }
       }
       
-      // Conversion loop
-      var outError: NSError? = nil
-      this.converter.convert(to: outBuffer, error: &outError, withInputFrom: inputBlock)
-      
-      let audioBuffer = outBuffer.audioBufferList.pointee.mBuffers
-      if let mData = audioBuffer.mData {
-        let length = Int(audioBuffer.mDataByteSize)
-        let data: NSData = NSData(bytes: mData, length: length)
-        completion(data)
-      }
-      else {
-        print("no data in buffer")
-      }
     })
     
-    isRecording = true
+    if !engine.isRunning {
+      makeEngineConnections()
+      startEngine()
+    }
+    
+    isRecording = true    
+  }
+  
+  @objc func pauseRecording() {
+    self.engine.pause()
+    isPaused = true
+  }
+  
+  @objc func resumeRecording() {
+    startEngine()
+    isPaused = false
   }
   
   @objc func stopRecording() {
