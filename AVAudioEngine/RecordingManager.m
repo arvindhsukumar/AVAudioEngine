@@ -10,10 +10,9 @@
 #import <AVFoundation/AVFoundation.h>
 #import <FLACiOS/all.h>
 #import "encode_single_16bit.h"
-#import "WebsocketManager.h"
 #import "AVAudioEngine-Swift.h"
 
-NSString const *kAccessToken = @"eyJhbGciOiJSUzI1NiIsImtpZCI6IjI2OGNhNTBjZTY0YjQxYWIzNGZhMDM1NzIwMmQ5ZTk0ZTcyYmQ2ZWMiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiQXJ2aW5kaCBTdWt1bWFyIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL2NsaWVudC1kZXYtZTMwMWQiLCJhdWQiOiJjbGllbnQtZGV2LWUzMDFkIiwiYXV0aF90aW1lIjoxNTY2NDc2NjYzLCJ1c2VyX2lkIjoiVTN4RGZUdUQ1ZGZHdll5M3F0U0FSVTkwVldaMiIsInN1YiI6IlUzeERmVHVENWRmR3ZZeTNxdFNBUlU5MFZXWjIiLCJpYXQiOjE1NjY0NzY2NjMsImV4cCI6MTU2NjQ4MDI2MywiZW1haWwiOiJhcnZpbmRoQGFicmlkZ2UuYWkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJhcnZpbmRoQGFicmlkZ2UuYWkiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.QYo1EeOQ9Eidw4El2DmC5Vx0gZFByfrRgQBEmTXDDCabTxaoOHZTsFF8zr3-IWzkhx3lOVoT0id6iaGlqiPjOl_Frv2AP37lFlxW_rl5K30uQAH6RKGOTMY21LEqTHpDTVwZYMRes8MlhcQ1tOdTNs-AoYMedYqBuS4XxcpeTC52ERngyY5YYAxYKIrdCWsVx3fbQow4swUyYI2Nk4kJu6vAzYxzw-BGqozKzjMKQDBNVzkoA1wJfNUPZS32YapCHQHNI9e0-Ph650SAsRkNM9qsfIEN17O4PoSb5xgOy_TtnuGiGZQHwenxX8dwVCH-OYbUXNVk44uLd92gsicRnQ";
+NSString const *kAccessToken = @"eyJhbGciOiJSUzI1NiIsImtpZCI6IjU0ODZkYTNlMWJmMjA5YzZmNzU2MjlkMWQ4MzRmNzEwY2EzMDlkNTAiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiQXJ2aW5kaCBTdWt1bWFyIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL2NsaWVudC1kZXYtZTMwMWQiLCJhdWQiOiJjbGllbnQtZGV2LWUzMDFkIiwiYXV0aF90aW1lIjoxNTY4Mzc5Mzc4LCJ1c2VyX2lkIjoiVTN4RGZUdUQ1ZGZHdll5M3F0U0FSVTkwVldaMiIsInN1YiI6IlUzeERmVHVENWRmR3ZZeTNxdFNBUlU5MFZXWjIiLCJpYXQiOjE1NjgzNzkzNzgsImV4cCI6MTU2ODM4Mjk3OCwiZW1haWwiOiJhcnZpbmRoQGFicmlkZ2UuYWkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJhcnZpbmRoQGFicmlkZ2UuYWkiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.bkDtupGnj5BY_WQxXvhyIcwIYf2SczGh4-s_FxMzLvfhQN57M0_TDPvM4TJQPo6in-jxL5J4iBelI2AZemecqYnCQgdoYD-trpC-Gmchc-q5FEjtLAdGpE827TcYHqo_UBMDub3-ubuRBNqn3ZNtqOKFF8cPVNhuaIjdZmVXbxyZ2g8N2PDHZmK3vMUCXHfNbkvDT7ScQSo83qUsScTpO-oyB_qfCtW8ATr8oUjGoVEEbye8dsEhPkrBqont8xuunX1yPn5lDjyEvSyN-qTXLAsrl6_xmC6PNPTSKITcvmeE7QrqquLRiG19Vh9iNmuulxeooPmOH3mWixnytZz_eQ";
 
 @interface RecordingManager() {
   // AVAudioEngine and AVAudioNodes
@@ -68,7 +67,6 @@ NSString const *kAccessToken = @"eyJhbGciOiJSUzI1NiIsImtpZCI6IjI2OGNhNTBjZTY0YjQ
 
 -(void)setupWebsocket {
   websocketManager = [[WebsocketManager alloc] initWithAccessToken: kAccessToken];
-  [websocketManager connect];
 }
 
 -(void)setupEngine {
@@ -122,15 +120,19 @@ NSString const *kAccessToken = @"eyJhbGciOiJSUzI1NiIsImtpZCI6IjI2OGNhNTBjZTY0YjQ
 
 
 - (void)startRecording {
-  [websocketManager start];
-  [_recorder startRecording:^(NSData * _Nonnull data) {
-    [self->websocketManager sendData:data];
-  }];  
+  [websocketManager connect:^(BOOL isConnected) {
+    if (isConnected) {
+      [websocketManager start];
+      [_recorder startRecording:^(NSData * _Nonnull data) {
+        [self->websocketManager sendWithData:data];
+      }];
+    }
+  }];
 }
 
 - (void)stopRecording {
   [_recorder stopRecording];
-  [websocketManager sendMessage:@"{\"type\": \"stop\"}"];
+  [websocketManager stop];
 }
 
 - (void)pauseRecording {
