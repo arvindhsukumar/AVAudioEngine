@@ -12,7 +12,7 @@ import SocketRocket
 let kIPAddress: String = "192.168.9.150"
 
 class WebsocketManager: NSObject {
-  var socket: SRWebSocket!
+  var socket: SRWebSocket?
   var onConnect: ((Bool) -> Void)?
   var accessToken: String
   
@@ -53,17 +53,17 @@ class WebsocketManager: NSObject {
     request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
 
     socket = SRWebSocket(urlRequest: request, protocols: ["chat", "superchat"], allowsUntrustedSSLCertificates: true)
-    socket.delegate = self
+    socket?.delegate = self
     
-    socket.open()
+    socket?.open()
   }
   
   @objc func send(data: NSData) {
-    socket.send(data)
+    socket?.send(data)
   }
   
   @objc func send(message: String) {
-    socket.send(message)
+    socket?.send(message)
   }
   
   @objc func start() {
