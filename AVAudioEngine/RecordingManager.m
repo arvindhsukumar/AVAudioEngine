@@ -121,12 +121,10 @@ NSString const *kAccessToken = @"eyJhbGciOiJSUzI1NiIsImtpZCI6IjU0ODZkYTNlMWJmMjA
 
 - (void)startRecording {
   [websocketManager connect:^(BOOL isConnected) {
-    if (isConnected) {
-      [websocketManager start];
-      [_recorder startRecording:^(NSData * _Nonnull data) {
-        [self->websocketManager sendWithData:data];
-      }];
-    }
+    [websocketManager start];
+    [_recorder startRecording:^(NSData * _Nonnull data) {
+      [self->websocketManager sendWithData:data];
+    }];
   }];
 }
 
