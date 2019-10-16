@@ -14,8 +14,8 @@ struct RecordingInfo {
   var userID: String
   
   init(info: [String: AnyHashable]) {
-    self.encounterID = info["encounterID"] as! String
-    self.userID = info["userID"] as! String
+    self.encounterID = info["encounterID"]?.base as! String
+    self.userID = info["userID"]?.base as! String
   }
 }
 
@@ -120,8 +120,8 @@ class Recorder: NSObject {
           let length = Int(audioBuffer.mDataByteSize)
           let data: NSData = NSData(bytes: mData, length: length)
           DispatchQueue.main.async {
-            completion(data)
             this.writeDataToDisk(data as Data)
+            completion(data)
           }
         }
         else {
@@ -152,7 +152,7 @@ class Recorder: NSObject {
     print("current file offset: \(fileHandle.offsetInFile)")
   }
   
-  func createFileIfNeeded() {
+  fileprivate func createFileIfNeeded() {
     guard let info = currentRecordingInfo else {
       return
     }
@@ -182,6 +182,7 @@ class Recorder: NSObject {
       mixerNode.removeTap(onBus: 0)
       engine.stop()
       isRecording = false
+      isPaused = false
       fileHandle?.closeFile()
       currentRecordingInfo = nil
     }

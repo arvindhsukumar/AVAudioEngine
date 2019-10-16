@@ -8,6 +8,7 @@ target 'AVAudioEngine' do
   # Pods for AVAudioEngine
   pod 'SnapKit'
   pod 'SocketRocket'
+  pod 'SwiftyUserDefaults'
   
   target 'AVAudioEngineTests' do
     inherit! :search_paths

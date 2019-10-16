@@ -23,6 +23,9 @@
 		D456977F232BCC7100766183 /* WebsocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D456977E232BCC7100766183 /* WebsocketManager.swift */; };
 		D46CB9BF2355F7310058300B /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46CB9BE2355F7310058300B /* Helper.swift */; };
 		D4AB71DB23572AA10016251A /* RecordingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AB71DA23572AA10016251A /* RecordingManager.swift */; };
+		D4AB71DD235747E50016251A /* Defaults+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AB71DC235747E50016251A /* Defaults+Extensions.swift */; };
+		D4AB71DF235764010016251A /* RecorderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AB71DE235764010016251A /* RecorderTests.swift */; };
+		D4AB71E1235765C20016251A /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AB71E0235765C20016251A /* Helper.swift */; };
 		E3FDA45D12142D9E24AF9D8A /* Pods_AVAudioEngineUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ACC15D85519502CCB90B852 /* Pods_AVAudioEngineUITests.framework */; };
 		E45ED74DF7C4ADF91D570EE8 /* Pods_AVAudioEngineTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0072351D48AD41AB56CD164C /* Pods_AVAudioEngineTests.framework */; };
 /* End PBXBuildFile section */
@@ -77,6 +80,9 @@
 		D456977E232BCC7100766183 /* WebsocketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsocketManager.swift; sourceTree = "<group>"; };
 		D46CB9BE2355F7310058300B /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		D4AB71DA23572AA10016251A /* RecordingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingManager.swift; sourceTree = "<group>"; };
+		D4AB71DC235747E50016251A /* Defaults+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Defaults+Extensions.swift"; sourceTree = "<group>"; };
+		D4AB71DE235764010016251A /* RecorderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderTests.swift; sourceTree = "<group>"; };
+		D4AB71E0235765C20016251A /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,6 +174,7 @@
 				6598392722FAD05B0052F485 /* Recorder.swift */,
 				D456977E232BCC7100766183 /* WebsocketManager.swift */,
 				D46CB9BE2355F7310058300B /* Helper.swift */,
+				D4AB71DC235747E50016251A /* Defaults+Extensions.swift */,
 			);
 			path = AVAudioEngine;
 			sourceTree = "<group>";
@@ -177,6 +184,8 @@
 			children = (
 				65FADC5922DDBED20026F5E0 /* AVAudioEngineTests.swift */,
 				65FADC5B22DDBED20026F5E0 /* Info.plist */,
+				D4AB71DE235764010016251A /* RecorderTests.swift */,
+				D4AB71E0235765C20016251A /* Helper.swift */,
 			);
 			path = AVAudioEngineTests;
 			sourceTree = "<group>";
@@ -433,6 +442,7 @@
 				D4AB71DB23572AA10016251A /* RecordingManager.swift in Sources */,
 				65FADC4722DDBED10026F5E0 /* ViewController.swift in Sources */,
 				D456977F232BCC7100766183 /* WebsocketManager.swift in Sources */,
+				D4AB71DD235747E50016251A /* Defaults+Extensions.swift in Sources */,
 				65FADC4522DDBED10026F5E0 /* AppDelegate.swift in Sources */,
 				655D138022E9BF410021C46A /* encode_single_16bit.c in Sources */,
 				6598392822FAD05B0052F485 /* Recorder.swift in Sources */,
@@ -446,6 +456,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				65FADC5A22DDBED20026F5E0 /* AVAudioEngineTests.swift in Sources */,
+				D4AB71DF235764010016251A /* RecorderTests.swift in Sources */,
+				D4AB71E1235765C20016251A /* Helper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
