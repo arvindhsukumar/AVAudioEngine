@@ -8,6 +8,7 @@
 
 import UIKit
 import SnapKit
+import AVFoundation
 
 class ViewController: UIViewController {
   let button: UIButton = {
@@ -118,15 +119,15 @@ class ViewController: UIViewController {
   }
   
   func setupRecordingManager() {
-    RecordingManager.sharedInstance()
+    RecordingManager.shared
   }
   
   @objc func stopRecording() {
-    RecordingManager.sharedInstance().stopRecording()
+    RecordingManager.shared.stopRecording()
   }
 
   @objc func toggleRecording() {
-    let manager = RecordingManager.sharedInstance()
+    let manager = RecordingManager.shared
     if manager.isRecording {
       if button.currentTitle == "Pause" {
         manager.pauseRecording()

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 class Recorder: NSObject {
   @objc var engine: AVAudioEngine!
