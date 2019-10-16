@@ -11,17 +11,29 @@ import SocketRocket
 
 let kIPAddress: String = "192.168.9.150"
 
+typealias WebsocketOnConnect = ((_ connected: Bool) -> Void)
+typealias WebsocketOnClose = ((_ wasClean: Bool) -> Void)
+
 class WebsocketManager: NSObject {
   var socket: SRWebSocket?
-  var onConnect: ((Bool) -> Void)?
+  var onConnect: WebsocketOnConnect?
+  var onClose: WebsocketOnClose?
   var accessToken: String
+  var currentRecordingInfo: RecordingInfo?
   
-  @objc init(accessToken: String) {
+  init(accessToken: String) {
     self.accessToken = accessToken
     super.init()
   }
   
-  @objc func connect(_ onConnect:@escaping (Bool) -> Void) {
+  func connect(info: RecordingInfo, _ onConnect:@escaping WebsocketOnConnect) {
+    if let socket = socket, socket.readyState == .OPEN {
+      // Socket is already open, no need to connect again
+      onConnect(true)
+      return
+    }
+    
+    self.currentRecordingInfo = info
     self.onConnect = onConnect
     
     let session = URLSession.shared
@@ -59,18 +71,31 @@ class WebsocketManager: NSObject {
   }
   
   @objc func send(data: NSData) {
-    socket?.send(data)
+    guard let socket = socket, socket.readyState == .OPEN else {
+      return
+    }
+    
+    socket.send(data)
   }
   
   @objc func send(message: String) {
-    socket?.send(message)
+    guard let socket = socket, socket.readyState == .OPEN else {
+      return
+    }
+    
+    socket.send(message)
   }
   
   @objc func start() {
-    send(message: "{\"type\": \"start\",\"encounter_id\": \"some_id\",\"user_id\": \"uid\",\"recording_number\": 0}")
+    guard let info = currentRecordingInfo else {
+      return
+    }
+    
+    send(message: "{\"type\": \"start\",\"encounter_id\": \"\(info.encounterID)\",\"user_id\": \"\(info.userID)\",\"recording_number\": 0}")
   }
   
-  @objc func stop() {
+  @objc func stop(_ onClose: @escaping WebsocketOnClose) {
+    self.onClose = onClose
     sendStopMessage()
   }
   
@@ -95,6 +120,8 @@ extension WebsocketManager: SRWebSocketDelegate {
   
   func webSocket(_ webSocket: SRWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
     print("Websocket closed with code: \(code), reason: \(reason)")
+    onClose?(wasClean)
+    currentRecordingInfo = nil
   }
   
   

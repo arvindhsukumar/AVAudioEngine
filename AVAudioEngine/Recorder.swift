@@ -9,6 +9,16 @@
 import UIKit
 import AVFoundation
 
+struct RecordingInfo {
+  var encounterID: String
+  var userID: String
+  
+  init(info: [String: AnyHashable]) {
+    self.encounterID = info["encounterID"] as! String
+    self.userID = info["userID"] as! String
+  }
+}
+
 class Recorder: NSObject {
   @objc var engine: AVAudioEngine!
   @objc var downMixer: AVAudioMixerNode!
@@ -16,7 +26,7 @@ class Recorder: NSObject {
   @objc var isPaused: Bool = false
   @objc var converter: AVAudioConverter!
   var fileHandle: FileHandle?
-  var fileURL: URL?
+  var currentRecordingInfo: RecordingInfo?
   
   override init() {
     super.init()
@@ -39,7 +49,7 @@ class Recorder: NSObject {
     engine.connect(downMixer, to: engine.mainMixerNode, format: downMixerFormat)
   }
   
-  @objc func startEngine() {
+  func startEngine() {
     do {
       try engine.start()
     }
@@ -48,7 +58,9 @@ class Recorder: NSObject {
     }
   }
   
-  @objc func startRecording(_ completion: @escaping (NSData) -> ()) {
+  func startRecording(info: RecordingInfo, _ completion: @escaping (NSData) -> ()) {
+    currentRecordingInfo = info
+    
     let mixerNode: AVAudioNode = downMixer
     let mixerFormat = mixerNode.outputFormat(forBus: 0)
     
@@ -73,9 +85,9 @@ class Recorder: NSObject {
     }
     
     do {
-      fileURL = Helper.recordingURL(for: "test")
+      let fileURL = Helper.recordingURL(for: info.encounterID)
       createFileIfNeeded()
-      fileHandle = try FileHandle(forWritingTo: fileURL!)
+      fileHandle = try FileHandle(forWritingTo: fileURL)
     }
     catch {
       print(error)
@@ -141,11 +153,12 @@ class Recorder: NSObject {
   }
   
   func createFileIfNeeded() {
-    guard let fileURL = self.fileURL else {
+    guard let info = currentRecordingInfo else {
       return
     }
     
     let fileManager = FileManager.default
+    let fileURL = Helper.recordingURL(for: info.encounterID)
     let fileExists = fileManager.fileExists(atPath: fileURL.path)
     
     if !fileExists {
@@ -170,6 +183,7 @@ class Recorder: NSObject {
       engine.stop()
       isRecording = false
       fileHandle?.closeFile()
+      currentRecordingInfo = nil
     }
   }
 }
