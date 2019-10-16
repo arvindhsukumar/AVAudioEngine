@@ -62,7 +62,18 @@ class RecordingManager: NSObject {
   }
   
   @objc func handleInterruption(_ notification: Notification) {
-    
+    let userInfo = notification.userInfo
+    let interruptionTypeValue: UInt = userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt ?? 0
+    let interruptionType = AVAudioSession.InterruptionType(rawValue: interruptionTypeValue)!
+
+    switch interruptionType {
+    case .began:
+      pauseRecording()
+    case .ended:
+      resumeRecording()
+    @unknown default:
+      fatalError()
+    }
   }
   
   func setupWebsocket() {
