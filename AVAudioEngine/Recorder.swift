@@ -14,6 +14,8 @@ class Recorder: NSObject {
   @objc var isRecording: Bool = false
   @objc var isPaused: Bool = false
   @objc var converter: AVAudioConverter!
+  var fileHandle: FileHandle?
+  var fileURL: URL?
   
   override init() {
     super.init()
@@ -69,8 +71,15 @@ class Recorder: NSObject {
       }
     }
     
-    let file = try! AVAudioFile(forWriting: URL(string: NSTemporaryDirectory().appending("mixerOutput.caf"))!, settings: mixerFormat.settings)
-    
+    do {
+      fileURL = Helper.recordingURL(for: "test")
+      createFileIfNeeded()
+      fileHandle = try FileHandle(forWritingTo: fileURL!)
+    }
+    catch {
+      print(error)
+    }
+        
     mixerNode.installTap(onBus: 0, bufferSize: 1152 * 8, format: mixerFormat, block: {
       [weak self] (buffer, time) in
       guard let this = self else {
@@ -98,8 +107,8 @@ class Recorder: NSObject {
           let length = Int(audioBuffer.mDataByteSize)
           let data: NSData = NSData(bytes: mData, length: length)
           DispatchQueue.main.async {
-            try! file.write(from: buffer)
             completion(data)
+            this.writeDataToDisk(data as Data)
           }
         }
         else {
@@ -117,6 +126,32 @@ class Recorder: NSObject {
     isRecording = true    
   }
   
+  func writeDataToDisk(_ data: Data) {
+    guard let fileHandle = self.fileHandle else {
+      return
+    }
+    
+    createFileIfNeeded()
+    
+    fileHandle.seekToEndOfFile()
+    fileHandle.write(data)
+    
+    print("current file offset: \(fileHandle.offsetInFile)")
+  }
+  
+  func createFileIfNeeded() {
+    guard let fileURL = self.fileURL else {
+      return
+    }
+    
+    let fileManager = FileManager.default
+    let fileExists = fileManager.fileExists(atPath: fileURL.path)
+    
+    if !fileExists {
+      fileManager.createFile(atPath: fileURL.path, contents: nil, attributes: nil)
+    }
+  }
+  
   @objc func pauseRecording() {
     self.engine.pause()
     isPaused = true
@@ -131,8 +166,9 @@ class Recorder: NSObject {
     if self.isRecording {
       let mixerNode: AVAudioNode = downMixer
       mixerNode.removeTap(onBus: 0)
-      self.engine.stop()
-      self.isRecording = false
+      engine.stop()
+      isRecording = false
+      fileHandle?.closeFile()
     }
   }
 }
