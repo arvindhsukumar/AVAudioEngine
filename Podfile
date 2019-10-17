@@ -7,7 +7,7 @@ target 'AVAudioEngine' do
 
   # Pods for AVAudioEngine
   pod 'SnapKit'
-  pod 'SocketRocket'
+  pod 'Starscream'
   pod 'SwiftyUserDefaults'
   
   target 'AVAudioEngineTests' do

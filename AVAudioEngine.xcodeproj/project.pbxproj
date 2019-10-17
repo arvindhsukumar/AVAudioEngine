@@ -24,6 +24,7 @@
 		D46CB9BF2355F7310058300B /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46CB9BE2355F7310058300B /* Helper.swift */; };
 		D48D0FE5235847A300C8356F /* WebsocketManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48D0FE4235847A300C8356F /* WebsocketManagerTests.swift */; };
 		D48D0FE723584BB500C8356F /* RecordingManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48D0FE623584BB500C8356F /* RecordingManagerTests.swift */; };
+		D48D0FE92358832E00C8356F /* MockSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48D0FE82358832E00C8356F /* MockSocket.swift */; };
 		D4AB71DB23572AA10016251A /* RecordingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AB71DA23572AA10016251A /* RecordingManager.swift */; };
 		D4AB71DD235747E50016251A /* Defaults+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AB71DC235747E50016251A /* Defaults+Extensions.swift */; };
 		D4AB71DF235764010016251A /* RecorderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AB71DE235764010016251A /* RecorderTests.swift */; };
@@ -83,6 +84,7 @@
 		D46CB9BE2355F7310058300B /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		D48D0FE4235847A300C8356F /* WebsocketManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsocketManagerTests.swift; sourceTree = "<group>"; };
 		D48D0FE623584BB500C8356F /* RecordingManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingManagerTests.swift; sourceTree = "<group>"; };
+		D48D0FE82358832E00C8356F /* MockSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSocket.swift; sourceTree = "<group>"; };
 		D4AB71DA23572AA10016251A /* RecordingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingManager.swift; sourceTree = "<group>"; };
 		D4AB71DC235747E50016251A /* Defaults+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Defaults+Extensions.swift"; sourceTree = "<group>"; };
 		D4AB71DE235764010016251A /* RecorderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderTests.swift; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 				D4AB71E0235765C20016251A /* Helper.swift */,
 				D48D0FE4235847A300C8356F /* WebsocketManagerTests.swift */,
 				D48D0FE623584BB500C8356F /* RecordingManagerTests.swift */,
+				D48D0FE82358832E00C8356F /* MockSocket.swift */,
 			);
 			path = AVAudioEngineTests;
 			sourceTree = "<group>";
@@ -465,6 +468,7 @@
 				D4AB71DF235764010016251A /* RecorderTests.swift in Sources */,
 				D4AB71E1235765C20016251A /* Helper.swift in Sources */,
 				D48D0FE5235847A300C8356F /* WebsocketManagerTests.swift in Sources */,
+				D48D0FE92358832E00C8356F /* MockSocket.swift in Sources */,
 				D48D0FE723584BB500C8356F /* RecordingManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

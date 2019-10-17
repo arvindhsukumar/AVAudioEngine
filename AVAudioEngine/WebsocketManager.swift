@@ -7,15 +7,15 @@
 //
 
 import UIKit
-import SocketRocket
+import Starscream
 
-let kIPAddress: String = "192.168.9.150"
+let kIPAddress: String = "192.168.2.100"
 
 typealias WebsocketOnConnect = ((_ connected: Bool) -> Void)
 typealias WebsocketOnClose = ((_ wasClean: Bool) -> Void)
 
 class WebsocketManager: NSObject {
-  var socket: SRWebSocket?
+  var socket: WebSocket?
   var onConnect: WebsocketOnConnect?
   var onStop: WebsocketOnClose? // For when user stops recording
   var onClose: WebsocketOnClose? // For when websocket is closed for _any_ reason
@@ -28,7 +28,7 @@ class WebsocketManager: NSObject {
   }
   
   func connect(info: RecordingInfo, _ onConnect:@escaping WebsocketOnConnect) {
-    if let socket = socket, socket.readyState == .OPEN {
+    if let socket = socket, socket.isConnected {
       if let currentRecordingInfo = currentRecordingInfo, info != currentRecordingInfo {
         // Recording has changed
         self.currentRecordingInfo = info
@@ -71,26 +71,47 @@ class WebsocketManager: NSObject {
     var request = URLRequest(url: url)
     request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
 
-    socket = SRWebSocket(urlRequest: request, protocols: ["chat", "superchat"], allowsUntrustedSSLCertificates: true)
-    socket?.delegate = self
+    socket = WebSocket(request: request, protocols: ["chat", "superchat"])
+    socket?.onConnect = {
+      [weak self] in
+      print("Socket connected")
+      self?.onConnect?(true)
+      self?.onConnect = nil
+    }
     
-    socket?.open()
+    socket?.onDisconnect = {
+      [weak self] error in
+      print("Socket disconnected")
+      
+      let wasClean = error == nil
+      self?.onStop?(wasClean)
+      self?.onClose?(wasClean)
+      self?.onStop = nil
+      self?.currentRecordingInfo = nil
+    }
+    
+    socket?.onText = {
+      [weak self] text in
+      print("Received message: \(text)")
+    }
+    
+    socket?.connect()
   }
   
   @objc func send(data: NSData) {
-    guard let socket = socket, socket.readyState == .OPEN else {
+    guard let socket = socket, socket.isConnected else {
       return
     }
     
-    socket.send(data)
+    socket.write(data: data as Data)
   }
   
   @objc func send(message: String) {
-    guard let socket = socket, socket.readyState == .OPEN else {
+    guard let socket = socket, socket.isConnected else {
       return
     }
     
-    socket.send(message)
+    socket.write(string: message)
   }
   
   @objc func start() {
@@ -104,7 +125,7 @@ class WebsocketManager: NSObject {
   @objc func stop(_ onStop: @escaping WebsocketOnClose) {
     self.onStop = onStop
     
-    if let socket = socket, socket.readyState == .OPEN {
+    if let socket = socket, socket.isConnected {
       sendStopMessage()
     }
     else {
@@ -116,31 +137,4 @@ class WebsocketManager: NSObject {
   @objc func sendStopMessage() {
     self.send(message: "{\"type\": \"stop\"}")
   }
-  
-}
-
-extension WebsocketManager: SRWebSocketDelegate {
-  func webSocket(_ webSocket: SRWebSocket!, didReceiveMessage message: Any!) {
-    print("Websocket received message: \(message)")
-  }
-  
-  func webSocketDidOpen(_ webSocket: SRWebSocket!) {
-    onConnect?(true)
-    onConnect = nil
-  }
-  
-  func webSocket(_ webSocket: SRWebSocket!, didFailWithError error: Error!) {
-    print("Websocket failed with error: \(error.localizedDescription)")
-  }
-  
-  func webSocket(_ webSocket: SRWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
-    print("Websocket closed with code: \(code), reason: \(reason)")
-    
-    onStop?(wasClean)
-    onClose?(wasClean)
-    onStop = nil
-    currentRecordingInfo = nil
-  }
-  
-  
 }
