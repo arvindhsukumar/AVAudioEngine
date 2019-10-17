@@ -17,9 +17,10 @@ typealias WebsocketOnClose = ((_ wasClean: Bool) -> Void)
 class WebsocketManager: NSObject {
   var socket: SRWebSocket?
   var onConnect: WebsocketOnConnect?
-  var onClose: WebsocketOnClose?
+  var onStop: WebsocketOnClose?
   var accessToken: String
   var currentRecordingInfo: RecordingInfo?
+  var shouldStop: Bool = false
   
   init(accessToken: String) {
     self.accessToken = accessToken
@@ -27,8 +28,8 @@ class WebsocketManager: NSObject {
   }
   
   func connect(info: RecordingInfo, _ onConnect:@escaping WebsocketOnConnect) {
-    if let socket = socket, socket.readyState == .OPEN {
-      // Socket is already open, no need to connect again
+    if let socket = socket, let currentRecordingInfo = currentRecordingInfo, socket.readyState == .OPEN, info == currentRecordingInfo {
+      // Socket is already open, with no change in the recording, so no need to connect again
       onConnect(true)
       return
     }
@@ -50,6 +51,7 @@ class WebsocketManager: NSObject {
       
       if let _ = error {
         this.onConnect?(false)
+        this.onConnect = nil
       }
       else {
         this.createSocket()
@@ -94,9 +96,18 @@ class WebsocketManager: NSObject {
     send(message: "{\"type\": \"start\",\"encounter_id\": \"\(info.encounterID)\",\"user_id\": \"\(info.userID)\",\"recording_number\": 0}")
   }
   
-  @objc func stop(_ onClose: @escaping WebsocketOnClose) {
-    self.onClose = onClose
-    sendStopMessage()
+  @objc func stop(_ onStop: @escaping WebsocketOnClose) {
+    self.onStop = onStop
+    self.shouldStop = true
+    
+    if let socket = socket, socket.readyState == .OPEN {
+      sendStopMessage()
+    }
+    else {
+      onStop(false)
+      self.onStop = nil
+      self.shouldStop = false
+    }
   }
   
   @objc func sendStopMessage() {
@@ -112,6 +123,7 @@ extension WebsocketManager: SRWebSocketDelegate {
   
   func webSocketDidOpen(_ webSocket: SRWebSocket!) {
     onConnect?(true)
+    onConnect = nil
   }
   
   func webSocket(_ webSocket: SRWebSocket!, didFailWithError error: Error!) {
@@ -120,7 +132,13 @@ extension WebsocketManager: SRWebSocketDelegate {
   
   func webSocket(_ webSocket: SRWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
     print("Websocket closed with code: \(code), reason: \(reason)")
-    onClose?(wasClean)
+    
+    if shouldStop {
+      // Call onStop only if stop message was sent
+      onStop?(wasClean)
+      onStop = nil
+      shouldStop = false
+    }
     currentRecordingInfo = nil
   }
   

@@ -9,7 +9,7 @@
 import UIKit
 import AVFoundation
 
-struct RecordingInfo {
+struct RecordingInfo: Equatable {
   var encounterID: String
   var userID: String
   
@@ -17,7 +17,13 @@ struct RecordingInfo {
     self.encounterID = info["encounterID"]?.base as! String
     self.userID = info["userID"]?.base as! String
   }
+  
+  static func ==(lhs: RecordingInfo, rhs: RecordingInfo) -> Bool {
+    return (lhs.encounterID == rhs.encounterID) && (lhs.userID == rhs.userID)
+  }
 }
+
+
 
 class Recorder: NSObject {
   @objc var engine: AVAudioEngine!
@@ -152,7 +158,7 @@ class Recorder: NSObject {
     print("current file offset: \(fileHandle.offsetInFile)")
   }
   
-  fileprivate func createFileIfNeeded() {
+  func createFileIfNeeded() {
     guard let info = currentRecordingInfo else {
       return
     }

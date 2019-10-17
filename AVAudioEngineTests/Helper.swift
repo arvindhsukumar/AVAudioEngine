@@ -13,4 +13,10 @@ class Helper: NSObject {
   static var recordingInfo: RecordingInfo {
     return RecordingInfo(info: ["encounterID": "test-encounter", "userID": "1"])
   }
+  
+  static func deleteRecording() {
+    let info = Helper.recordingInfo
+    let fileManager = FileManager.default
+    try? fileManager.removeItem(at: AVAudioEngine.Helper.recordingURL(for: info.encounterID))
+  }
 }

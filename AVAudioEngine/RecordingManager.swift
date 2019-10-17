@@ -68,8 +68,10 @@ class RecordingManager: NSObject {
 
     switch interruptionType {
     case .began:
+      isSessionInterrupted = true
       pauseRecording()
     case .ended:
+      isSessionInterrupted = false
       resumeRecording()
     @unknown default:
       fatalError()
@@ -104,6 +106,12 @@ class RecordingManager: NSObject {
   func startRecording(_ info: [String: AnyHashable]) {
     // TODO: Show spinner
     let info = RecordingInfo(info: info)
+    
+    if isRecording {
+      // Recording already happening, but another start request came in.
+      return
+    }
+        
     currentRecordingInfo = info
     
     websocketManager.connect(info: info) {

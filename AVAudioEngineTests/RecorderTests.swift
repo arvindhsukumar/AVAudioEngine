@@ -19,6 +19,7 @@ class RecorderTests: XCTestCase {
   
   override func tearDown() {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
+    Helper.deleteRecording()
   }
   
   func testStartRecording() {
@@ -57,6 +58,7 @@ class RecorderTests: XCTestCase {
     recorder.currentRecordingInfo = info
     
     let fileURL = AVAudioEngine.Helper.recordingURL(for: info.encounterID)
+    recorder.createFileIfNeeded()
     recorder.fileHandle = try! FileHandle(forWritingTo: fileURL)
     
     XCTAssertTrue(recorder.fileHandle!.offsetInFile == 0)
