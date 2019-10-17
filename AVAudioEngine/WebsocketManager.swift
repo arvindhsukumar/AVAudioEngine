@@ -17,10 +17,10 @@ typealias WebsocketOnClose = ((_ wasClean: Bool) -> Void)
 class WebsocketManager: NSObject {
   var socket: SRWebSocket?
   var onConnect: WebsocketOnConnect?
-  var onStop: WebsocketOnClose?
+  var onStop: WebsocketOnClose? // For when user stops recording
+  var onClose: WebsocketOnClose? // For when websocket is closed for _any_ reason
   var accessToken: String
   var currentRecordingInfo: RecordingInfo?
-  var shouldStop: Bool = false
   
   init(accessToken: String) {
     self.accessToken = accessToken
@@ -28,8 +28,13 @@ class WebsocketManager: NSObject {
   }
   
   func connect(info: RecordingInfo, _ onConnect:@escaping WebsocketOnConnect) {
-    if let socket = socket, let currentRecordingInfo = currentRecordingInfo, socket.readyState == .OPEN, info == currentRecordingInfo {
-      // Socket is already open, with no change in the recording, so no need to connect again
+    if let socket = socket, socket.readyState == .OPEN {
+      if let currentRecordingInfo = currentRecordingInfo, info != currentRecordingInfo {
+        // Recording has changed
+        self.currentRecordingInfo = info
+      }
+      
+      // Socket is already open, so no need to connect again
       onConnect(true)
       return
     }
@@ -98,7 +103,6 @@ class WebsocketManager: NSObject {
   
   @objc func stop(_ onStop: @escaping WebsocketOnClose) {
     self.onStop = onStop
-    self.shouldStop = true
     
     if let socket = socket, socket.readyState == .OPEN {
       sendStopMessage()
@@ -106,7 +110,6 @@ class WebsocketManager: NSObject {
     else {
       onStop(false)
       self.onStop = nil
-      self.shouldStop = false
     }
   }
   
@@ -133,12 +136,9 @@ extension WebsocketManager: SRWebSocketDelegate {
   func webSocket(_ webSocket: SRWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
     print("Websocket closed with code: \(code), reason: \(reason)")
     
-    if shouldStop {
-      // Call onStop only if stop message was sent
-      onStop?(wasClean)
-      onStop = nil
-      shouldStop = false
-    }
+    onStop?(wasClean)
+    onClose?(wasClean)
+    onStop = nil
     currentRecordingInfo = nil
   }
   

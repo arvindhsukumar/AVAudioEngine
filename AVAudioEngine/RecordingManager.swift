@@ -80,6 +80,9 @@ class RecordingManager: NSObject {
   
   func setupWebsocket() {
     websocketManager = WebsocketManager(accessToken: kAccessToken)
+    websocketManager.onClose = {
+      _ in 
+    }
   }
   
   func setupRecorder() {
@@ -126,29 +129,19 @@ class RecordingManager: NSObject {
   
   func pauseRecording() {
     recorder.pauseRecording()
-    Defaults[.pauseTimestamp] = Date()
   }
   
   func resumeRecording() {
     guard let info = currentRecordingInfo else {
       return
     }
-    
-    let date = Date()
-    
+        
     let resume = {
       [weak self] in
       self?.recorder.resumeRecording()
     }
     
-    if let pauseTimestamp = Defaults[.pauseTimestamp], date.timeIntervalSince(pauseTimestamp) > 30 {
-      // If the pause duration is more than 30 seconds, we need to connect to the websocket again.
-      // TODO: Need to refresh access token?
-      websocketManager.connect(info: info) { (_) in
-        resume()
-      }
-    }
-    else {
+    websocketManager.connect(info: info) { (_) in
       resume()
     }
   }
@@ -157,7 +150,6 @@ class RecordingManager: NSObject {
     websocketManager.stop {
       [weak self] (_) in
       self?.recorder.stopRecording()
-      Defaults[.pauseTimestamp] = nil
       self?.currentRecordingInfo = nil
     }
   }

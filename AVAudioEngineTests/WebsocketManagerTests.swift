@@ -27,11 +27,15 @@ class WebsocketManagerTests: XCTestCase {
     let info = Helper.recordingInfo
     let expectation = XCTestExpectation()
     
+    XCTAssertNil(manager.onConnect, "onConnect should be nil before connecting")
+    
     manager.connect(info: info) { (_) in
       XCTAssertNotNil(manager.currentRecordingInfo)
-      XCTAssertNotNil(manager.onConnect)
       
-      expectation.fulfill()
+      DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) {
+        XCTAssertNil(manager.onConnect, "onConnect should be nil-ed out after connecting")
+        expectation.fulfill()
+      }
     }
     
     wait(for: [expectation], timeout: 10)
@@ -56,12 +60,12 @@ class WebsocketManagerTests: XCTestCase {
     
     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
       XCTAssertNotNil(manager.currentRecordingInfo)
-      
+      XCTAssertNil(manager.onStop, "onStop should be nil before stopping")
+     
       manager.stop { (_) in }
       
       DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) {
         XCTAssertNil(manager.onStop, "onStop should be nil-ed out after stopping")
-        XCTAssertFalse(manager.shouldStop)
         expectation.fulfill()
       }
     }

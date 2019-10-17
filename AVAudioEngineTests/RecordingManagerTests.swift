@@ -29,6 +29,7 @@ class RecordingManagerTests: XCTestCase {
     
     XCTAssertNotNil(manager.recorder)
     XCTAssertNotNil(manager.websocketManager)
+    XCTAssertNotNil(manager.websocketManager.onClose)
     
     let session = AVAudioSession.sharedInstance()
     XCTAssert(session.category == .playAndRecord)
@@ -130,7 +131,6 @@ class RecordingManagerTests: XCTestCase {
       
       XCTAssertTrue(manager.isRecording)
       XCTAssertTrue(manager.isPaused)
-      XCTAssertNotNil(Defaults[.pauseTimestamp])
       
       expectation.fulfill()
     }
@@ -153,12 +153,14 @@ class RecordingManagerTests: XCTestCase {
     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
       manager.resumeRecording()
       
-      XCTAssertTrue(manager.isRecording)
-      XCTAssertFalse(manager.isPaused)
-      
-      //TODO: Assert that socket is open?
-      
-      expectation.fulfill()
+      DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.2) {
+        XCTAssertTrue(manager.isRecording)
+        XCTAssertFalse(manager.isPaused)
+        
+        //TODO: Assert that socket is open?
+        
+        expectation.fulfill()
+      }
     }
     
     wait(for: [expectation], timeout: 10)
