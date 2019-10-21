@@ -147,6 +147,7 @@ class RecordingManager: NSObject {
   }
   
   func stopRecording() {
+    recorder.pauseRecording()
     websocketManager.stop {
       [weak self] (_) in
       self?.recorder.stopRecording()
