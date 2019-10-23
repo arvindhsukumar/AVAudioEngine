@@ -7,9 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "AVAudioEngine-Swift.h"
 #import <React/RCTBridgeModule.h>
 
 @interface RCT_EXTERN_MODULE(RecordingManager, NSObject)
+
+RCT_EXTERN_METHOD(prepareRecording:(NSDictionary *)info)
+RCT_EXTERN_METHOD(startRecording)
+RCT_EXTERN_METHOD(stopRecording)
+RCT_EXTERN_METHOD(pauseRecording)
+RCT_EXTERN_METHOD(resumeRecording)
 
 @end
