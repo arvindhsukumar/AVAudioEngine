@@ -42,10 +42,10 @@ class RecordingManagerTests: XCTestCase {
     let manager: RecordingManager = self.manager
     let info = Helper.recordingInfo
     let infoDict = ["encounterID": info.encounterID, "userID": info.userID]
-    
-    manager.startRecording(infoDict)
+    manager.prepareRecording(infoDict)
     
     let currentRecording = try! XCTUnwrap(manager.currentRecordingInfo)
+    manager.startRecording()
     
     XCTAssert(currentRecording.encounterID == infoDict["encounterID"])
     XCTAssert(currentRecording.userID == infoDict["userID"])
@@ -66,14 +66,15 @@ class RecordingManagerTests: XCTestCase {
     let infoDict = ["encounterID": info.encounterID, "userID": info.userID]
     
     XCTAssertFalse(manager.isRecording)
-    manager.startRecording(infoDict)
+    manager.prepareRecording(infoDict)
+    manager.startRecording()
     
     let currentRecording = try! XCTUnwrap(manager.currentRecordingInfo)
         
     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
       XCTAssertTrue(manager.isRecording, "Manager should be already recording")
-      
-      manager.startRecording(["encounterID": "another-encounter", "userID": info.userID])
+      manager.prepareRecording(["encounterID": "another-encounter", "userID": info.userID])
+      manager.startRecording()
       
       let newCurrentRecording = try! XCTUnwrap(manager.currentRecordingInfo)
       XCTAssertEqual(currentRecording, newCurrentRecording, "The new recording should have been ignored")
@@ -93,7 +94,8 @@ class RecordingManagerTests: XCTestCase {
     let infoDict = ["encounterID": info.encounterID, "userID": info.userID]
     
     XCTAssertFalse(manager.isRecording)
-    manager.startRecording(infoDict)
+    manager.prepareRecording(infoDict)
+    manager.startRecording()
     
     let currentRecording = try! XCTUnwrap(manager.currentRecordingInfo)
         
@@ -104,7 +106,8 @@ class RecordingManagerTests: XCTestCase {
     }
     
     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
-      manager.startRecording(["encounterID": "another-encounter", "userID": info.userID])
+      manager.prepareRecording(["encounterID": "another-encounter", "userID": info.userID])
+      manager.startRecording()
 
       let newCurrentRecording = try! XCTUnwrap(manager.currentRecordingInfo)
       XCTAssertNotEqual(currentRecording, newCurrentRecording, "The new recording should be different")
@@ -124,7 +127,8 @@ class RecordingManagerTests: XCTestCase {
     let info = Helper.recordingInfo
     let infoDict = ["encounterID": info.encounterID, "userID": info.userID]
     
-    manager.startRecording(infoDict)
+    manager.prepareRecording(infoDict)
+    manager.startRecording()
     
     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
       manager.pauseRecording()
@@ -144,7 +148,8 @@ class RecordingManagerTests: XCTestCase {
     let info = Helper.recordingInfo
     let infoDict = ["encounterID": info.encounterID, "userID": info.userID]
     
-    manager.startRecording(infoDict)
+    manager.prepareRecording(infoDict)
+    manager.startRecording()
     
     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
       manager.pauseRecording()
@@ -172,7 +177,8 @@ class RecordingManagerTests: XCTestCase {
     let info = Helper.recordingInfo
     let infoDict = ["encounterID": info.encounterID, "userID": info.userID]
     
-    manager.startRecording(infoDict)
+    manager.prepareRecording(infoDict)
+    manager.startRecording()
     
     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
       manager.stopRecording()
@@ -195,7 +201,8 @@ class RecordingManagerTests: XCTestCase {
     let info = Helper.recordingInfo
     let infoDict = ["encounterID": info.encounterID, "userID": info.userID]
     
-    manager.startRecording(infoDict)
+    manager.prepareRecording(infoDict)
+    manager.startRecording()
     
     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
       NotificationCenter.default.post(name: AVAudioSession.interruptionNotification, object: AVAudioSession.sharedInstance(), userInfo: [AVAudioSessionInterruptionTypeKey:  AVAudioSession.InterruptionType.began.rawValue])
@@ -216,7 +223,8 @@ class RecordingManagerTests: XCTestCase {
     let info = Helper.recordingInfo
     let infoDict = ["encounterID": info.encounterID, "userID": info.userID]
     
-    manager.startRecording(infoDict)
+    manager.prepareRecording(infoDict)
+    manager.startRecording()
     
     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
       NotificationCenter.default.post(name: AVAudioSession.interruptionNotification, object: AVAudioSession.sharedInstance(), userInfo: [AVAudioSessionInterruptionTypeKey:  AVAudioSession.InterruptionType.ended.rawValue])
@@ -237,12 +245,10 @@ class RecordingManagerTests: XCTestCase {
     let info = Helper.recordingInfo
     let infoDict = ["encounterID": info.encounterID, "userID": info.userID]
     
-    manager.startRecording(infoDict)
+    manager.prepareRecording(infoDict)
+    manager.startRecording()
 
-    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.2) {
-      let socket = try? XCTUnwrap(manager.websocketManager.socket)
-      socket?.close()
-      
+    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.2) {      
       XCTAssertTrue(manager.isRecording, "Manager should continue recording")
       expectation.fulfill()
     }

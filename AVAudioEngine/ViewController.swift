@@ -139,7 +139,8 @@ class ViewController: UIViewController {
       }      
     }
     else {
-      manager.startRecording(["encounterID": "test-encounter", "userID": "1"])
+      manager.prepareRecording(["encounterID": "test-encounter", "userID": "1"])
+      manager.startRecording()
       button.setTitle("Pause", for: UIControl.State.normal)
     }
   }

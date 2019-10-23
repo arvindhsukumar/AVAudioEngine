@@ -8,7 +8,6 @@
 
 import XCTest
 @testable import AVAudioEngine
-import SocketRocket
 
 class WebsocketManagerTests: XCTestCase {
   var manager: WebsocketManager!
