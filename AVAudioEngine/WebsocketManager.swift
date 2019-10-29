@@ -8,22 +8,23 @@
 
 import UIKit
 import Starscream
-
-let kIPAddress: String = "192.168.1.133"
+import Moya
 
 typealias WebsocketOnConnect = ((_ connected: Bool) -> Void)
 typealias WebsocketOnClose = ((_ wasClean: Bool) -> Void)
 
 class WebsocketManager: NSObject {
-  var socket: WebSocket?
+  var socket: Socket?
   var onConnect: WebsocketOnConnect?
   var onStop: WebsocketOnClose? // For when user stops recording
   var onClose: WebsocketOnClose? // For when websocket is closed for _any_ reason
   var accessToken: String
   var currentRecordingInfo: RecordingInfo?
+  let provider: MoyaProvider<SocketAPI>!
   
-  init(accessToken: String) {
+  init(accessToken: String, provider: MoyaProvider<SocketAPI> = MoyaProvider<SocketAPI>()) {
     self.accessToken = accessToken
+    self.provider = provider
     super.init()
   }
   
@@ -42,19 +43,14 @@ class WebsocketManager: NSObject {
     self.currentRecordingInfo = info
     self.onConnect = onConnect
     
-    let session = URLSession.shared
-    let url = URL(string: "http://\(kIPAddress):8080/streaming")!
-    var request = URLRequest(url: url)
-    request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-    
-    let task = session.dataTask(with: request) {
-      [weak self] (data, response, error) in
+    provider.request(SocketAPI.streaming(accessToken)) {
+      [weak self] (result) in
       
       guard let this = self else {
         return
       }
       
-      if let _ = error {
+      if let _ = result.error {
         this.onConnect?(false)
         this.onConnect = nil
       }
@@ -62,8 +58,6 @@ class WebsocketManager: NSObject {
         this.createSocket()
       }
     }
-    
-    task.resume()
   }
   
   @objc func createSocket() {
@@ -138,3 +132,5 @@ class WebsocketManager: NSObject {
     self.send(message: "{\"type\": \"stop\"}")
   }
 }
+
+extension WebSocket: Socket {}

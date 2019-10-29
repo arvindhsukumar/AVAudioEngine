@@ -103,18 +103,18 @@ class RecordingManagerTests: XCTestCase {
       XCTAssertTrue(manager.isRecording, "Manager should be already recording")
       manager.stopRecording()
       XCTAssertFalse(manager.isRecording, "Manager should stop recording")
-    }
-    
-    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
-      manager.prepareRecording(["encounterID": "another-encounter", "userID": info.userID])
-      manager.startRecording()
-
-      let newCurrentRecording = try! XCTUnwrap(manager.currentRecordingInfo)
-      XCTAssertNotEqual(currentRecording, newCurrentRecording, "The new recording should be different")
       
-      DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.2) {
-        XCTAssertTrue(manager.isRecording, "Manager should continue to record")
-        expectation.fulfill()
+      DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+        manager.prepareRecording(["encounterID": "another-encounter", "userID": info.userID])
+        manager.startRecording()
+
+        let newCurrentRecording = try! XCTUnwrap(manager.currentRecordingInfo)
+        XCTAssertNotEqual(currentRecording, newCurrentRecording, "The new recording should be different")
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.2) {
+          XCTAssertTrue(manager.isRecording, "Manager should continue to record")
+          expectation.fulfill()
+        }
       }
     }
     
@@ -153,18 +153,18 @@ class RecordingManagerTests: XCTestCase {
     
     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
       manager.pauseRecording()
-    }
-    
-    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
-      manager.resumeRecording()
       
-      DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.2) {
-        XCTAssertTrue(manager.isRecording)
-        XCTAssertFalse(manager.isPaused)
+      DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+        manager.resumeRecording()
         
-        //TODO: Assert that socket is open?
-        
-        expectation.fulfill()
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.2) {
+          XCTAssertTrue(manager.isRecording)
+          XCTAssertFalse(manager.isPaused)
+          
+          //TODO: Assert that socket is open?
+          
+          expectation.fulfill()
+        }
       }
     }
     

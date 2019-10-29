@@ -43,6 +43,8 @@ target 'AVAudioEngine' do
   pod 'SnapKit'
   pod 'Starscream'
   pod 'SwiftyUserDefaults'
+  pod 'Moya'
+
   react_native_pods
   
   target 'AVAudioEngineTests' do
