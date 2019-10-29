@@ -13,8 +13,8 @@ import Moya
 typealias WebsocketOnConnect = ((_ connected: Bool) -> Void)
 typealias WebsocketOnClose = ((_ wasClean: Bool) -> Void)
 
-class WebsocketManager: NSObject {
-  var socket: Socket?
+class WebsocketManager<S: NSObject>: NSObject where S: Socket {
+  var socket: S?
   var onConnect: WebsocketOnConnect?
   var onStop: WebsocketOnClose? // For when user stops recording
   var onClose: WebsocketOnClose? // For when websocket is closed for _any_ reason
@@ -65,7 +65,7 @@ class WebsocketManager: NSObject {
     var request = URLRequest(url: url)
     request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
 
-    socket = WebSocket(request: request, protocols: ["chat", "superchat"])
+    socket = S.make(request: request, protocols: ["chat", "superchat"])
     socket?.onConnect = {
       [weak self] in
       print("Socket connected")
@@ -133,4 +133,9 @@ class WebsocketManager: NSObject {
   }
 }
 
-extension WebSocket: Socket {}
+extension WebSocket: Socket {
+  static func make(request: URLRequest, protocols: [String]?) -> Self {
+    return WebSocket(request: request, protocols: protocols, stream: FoundationStream()) as! Self
+  }
+
+}

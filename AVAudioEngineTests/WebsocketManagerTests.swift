@@ -8,13 +8,15 @@
 
 import XCTest
 @testable import AVAudioEngine
+import Moya
 
 class WebsocketManagerTests: XCTestCase {
-  var manager: WebsocketManager!
+  var manager: WebsocketManager<MockSocket>!
   
   override func setUp() {
     // Put setup code here. This method is called before the invocation of each test method in the class.
-    self.manager = WebsocketManager(accessToken: "1234")
+    let provider = MoyaProvider<SocketAPI>(stubClosure: MoyaProvider.immediatelyStub)
+    self.manager = WebsocketManager<MockSocket>(accessToken: "1234", provider: provider)
   }
 
   override func tearDown() {
@@ -46,7 +48,6 @@ class WebsocketManagerTests: XCTestCase {
     XCTAssertNil(manager.socket)
     manager.createSocket()
     XCTAssertNotNil(manager.socket)
-    XCTAssertNotNil(manager.socket?.delegate)
   }
   
   func testStop() {

@@ -15,7 +15,7 @@ let kAccessToken = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImZhMWQ3NzBlZWY5ZWFhNjU0MzY1ZGE5
 @objc(RecordingManager)
 class RecordingManager: NSObject {
   var recorder: Recorder!
-  var websocketManager: WebsocketManager!
+  var websocketManager: WebsocketManager<WebSocket>!
   var isConfigChangePending: Bool = false
   var isSessionInterrupted: Bool = false
   var isRecording: Bool {

@@ -7,8 +7,9 @@
 //
 
 import Foundation
+import Starscream
 
-protocol Socket {
+protocol Socket: class {
   var isConnected: Bool {get}
   var onConnect: (() -> Void)? {get set}
   var onDisconnect: ((Error?) -> Void)? {get set}
@@ -18,4 +19,6 @@ protocol Socket {
   func disconnect()
   func write(data: Data)
   func write(string: String)
+  
+  static func make(request: URLRequest, protocols: [String]?) -> Self
 }

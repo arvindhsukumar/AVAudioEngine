@@ -37,5 +37,13 @@ class MockSocket: NSObject, Socket {
   
   func write(string: String) {
     onText?("Received \(string)")
+    
+    if string.contains("stop") {
+      disconnect()
+    }
+  }
+  
+  static func make(request: URLRequest, protocols: [String]?) -> Self {
+    return MockSocket() as! Self
   }
 }
