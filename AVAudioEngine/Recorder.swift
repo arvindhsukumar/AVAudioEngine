@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import SwiftyUserDefaults
 
 struct RecordingInfo: Equatable {
   var encounterID: String
@@ -83,7 +84,7 @@ class Recorder: NSObject {
     if self.converter == nil {
       if let c = AVAudioConverter(from: mixerFormat, to: outFormat) {
         self.converter = c
-        self.converter.primeMethod = AVAudioConverterPrimeMethod.pre
+        self.converter.primeMethod = AVAudioConverterPrimeMethod.none
       }
       else {
         print("error creating converter")
@@ -127,6 +128,11 @@ class Recorder: NSObject {
           let data: NSData = NSData(bytes: mData, length: length)
           DispatchQueue.main.async {
             this.writeDataToDisk(data as Data)
+            
+            if let recordingInfo = this.currentRecordingInfo {
+              Helper.addBytesSaved(data as Data, recordingInfo: recordingInfo)
+            }
+            
             completion(data)
           }
         }
@@ -154,9 +160,9 @@ class Recorder: NSObject {
     
     fileHandle.seekToEndOfFile()
     fileHandle.write(data)
-    
-    print("current file offset: \(fileHandle.offsetInFile)")
   }
+  
+  
   
   func createFileIfNeeded() {
     guard let info = currentRecordingInfo else {

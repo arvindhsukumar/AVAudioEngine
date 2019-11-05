@@ -10,17 +10,21 @@ import UIKit
 import Starscream
 import Moya
 
+
 typealias WebsocketOnConnect = ((_ connected: Bool) -> Void)
 typealias WebsocketOnClose = ((_ wasClean: Bool) -> Void)
+typealias WebsocketOnMessage = ((_ message: String) -> Void)
 
 class WebsocketManager<S: NSObject>: NSObject where S: Socket {
   var socket: S?
   var onConnect: WebsocketOnConnect?
   var onStop: WebsocketOnClose? // For when user stops recording
   var onClose: WebsocketOnClose? // For when websocket is closed for _any_ reason
+  var onMessage: WebsocketOnMessage?
   var accessToken: String
   var currentRecordingInfo: RecordingInfo?
   let provider: MoyaProvider<SocketAPI>!
+  var firstAck: Ack?
   
   init(accessToken: String, provider: MoyaProvider<SocketAPI> = MoyaProvider<SocketAPI>()) {
     self.accessToken = accessToken
@@ -69,8 +73,12 @@ class WebsocketManager<S: NSObject>: NSObject where S: Socket {
     socket?.onConnect = {
       [weak self] in
       print("Socket connected")
-      self?.onConnect?(true)
-      self?.onConnect = nil
+      guard let this = self else {
+        return
+      }
+      
+      this.onConnect?(true)
+      this.onConnect = nil
     }
     
     socket?.onDisconnect = {
@@ -82,11 +90,23 @@ class WebsocketManager<S: NSObject>: NSObject where S: Socket {
       self?.onClose?(wasClean)
       self?.onStop = nil
       self?.currentRecordingInfo = nil
+      self?.firstAck = nil
     }
     
     socket?.onText = {
       [weak self] text in
-      print("Received message: \(text)")
+
+      guard let this = self else {
+        return
+      }
+      
+      if let ack = Ack(message: text), let recordingInfo = this.currentRecordingInfo {
+        let isFirstAck = (this.firstAck == nil)
+        Helper.addBytesProcessed(ack, isFirstAck: isFirstAck, recordingInfo: recordingInfo)
+        this.firstAck = ack
+      }
+    
+      this.onMessage?(text)
     }
     
     socket?.connect()
@@ -138,4 +158,16 @@ extension WebSocket: Socket {
     return WebSocket(request: request, protocols: protocols, stream: FoundationStream()) as! Self
   }
 
+}
+
+class Ack {
+  var bytes: Int
+  
+  init?(message: String) {
+    guard let json = try? JSONSerialization.jsonObject(with: message.data(using: String.Encoding.utf8)!, options: []) as? [String: AnyHashable] else {
+      return nil
+    }
+    
+    self.bytes = json["bytes"] as? Int ?? 0
+  }
 }
