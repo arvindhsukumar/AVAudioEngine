@@ -8,10 +8,8 @@
 
 import UIKit
 import Starscream
-import Moya
 
-
-typealias WebsocketOnConnect = ((_ connected: Bool) -> Void)
+typealias WebsocketOnConnect = ((_ connected: Bool, _ shouldStart: Bool) -> Void)
 typealias WebsocketOnClose = ((_ wasClean: Bool) -> Void)
 typealias WebsocketOnMessage = ((_ message: String) -> Void)
 
@@ -23,49 +21,35 @@ class WebsocketManager<S: NSObject>: NSObject where S: Socket {
   var onMessage: WebsocketOnMessage?
   var accessToken: String
   var currentRecordingInfo: RecordingInfo?
-  let provider: MoyaProvider<SocketAPI>!
   var firstAck: Ack?
   
-  init(accessToken: String, provider: MoyaProvider<SocketAPI> = MoyaProvider<SocketAPI>()) {
+  init(accessToken: String) {
     self.accessToken = accessToken
-    self.provider = provider
     super.init()
   }
   
   func connect(info: RecordingInfo, _ onConnect:@escaping WebsocketOnConnect) {
     if let socket = socket, socket.isConnected {
+      var shouldStart = false
       if let currentRecordingInfo = currentRecordingInfo, info != currentRecordingInfo {
         // Recording has changed
         self.currentRecordingInfo = info
+        shouldStart = true
       }
       
       // Socket is already open, so no need to connect again
-      onConnect(true)
+      onConnect(true, shouldStart)
       return
     }
     
     self.currentRecordingInfo = info
     self.onConnect = onConnect
-    
-    provider.request(SocketAPI.streaming(accessToken)) {
-      [weak self] (result) in
-      
-      guard let this = self else {
-        return
-      }
-      
-      if let _ = result.error {
-        this.onConnect?(false)
-        this.onConnect = nil
-      }
-      else {
-        this.createSocket()
-      }
-    }
+    self.createSocket()
   }
   
   @objc func createSocket() {
-    let url = URL(string: "ws://\(kIPAddress):8080/streaming")!
+    let url = websocketURL(isWS: false).appendingPathComponent("streaming")
+
     var request = URLRequest(url: url)
     request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
 
@@ -77,7 +61,7 @@ class WebsocketManager<S: NSObject>: NSObject where S: Socket {
         return
       }
       
-      this.onConnect?(true)
+      this.onConnect?(true, true)
       this.onConnect = nil
     }
     
@@ -117,7 +101,9 @@ class WebsocketManager<S: NSObject>: NSObject where S: Socket {
       return
     }
     
-    socket.write(data: data as Data)
+    DispatchQueue.main.async {
+      socket.write(data: data as Data)
+    }
   }
   
   @objc func send(message: String) {
@@ -125,7 +111,9 @@ class WebsocketManager<S: NSObject>: NSObject where S: Socket {
       return
     }
     
-    socket.write(string: message)
+    DispatchQueue.main.async {
+      socket.write(string: message)
+    }    
   }
   
   @objc func start() {

@@ -7,45 +7,25 @@
 //
 
 import Foundation
-import Moya
-import Alamofire
 
 let kIPAddress: String = "192.168.1.133"
+let isLocal: Bool = false
 
-enum SocketAPI {
-  case streaming(String)
-}
-
-extension SocketAPI: TargetType {
-  var baseURL: URL {
-    return URL(string: "http://\(kIPAddress):8080")!
+func websocketURL(isWS: Bool) -> URL {
+  var urlComponents: URLComponents = URLComponents()
+  if isLocal {
+    urlComponents.host = kIPAddress
+    urlComponents.port = 8080
+    urlComponents.scheme = "http"
+  }
+  else {
+    urlComponents.host = "streaming-service-dot-client-dev-e301d.appspot.com"
+    urlComponents.scheme = "https"
   }
   
-  var path: String {
-    switch self {
-    case .streaming(_): return "/streaming"
-    }
+  if isWS {
+    urlComponents.scheme = "ws"
   }
   
-  var method: Moya.Method {
-    switch self {
-    case .streaming(_): return .get
-    }
-  }
-  
-  var sampleData: Data {
-    switch self {
-    case .streaming(_): return "".data(using: String.Encoding.utf8)!
-    }
-  }
-  
-  var task: Task {
-    return Task.requestPlain
-  }
-  
-  var headers: [String : String]? {
-    switch self {
-    case .streaming(let accessToken): return ["Authorization": "Bearer \(accessToken)"]
-    }
-  }
+  return urlComponents.url!
 }
