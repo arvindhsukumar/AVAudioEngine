@@ -24,7 +24,7 @@ struct RecordingInfo: Equatable {
   }
 }
 
-
+typealias OnRecord = (NSData) -> Void
 
 class Recorder: NSObject {
   @objc var engine: AVAudioEngine!
@@ -32,8 +32,10 @@ class Recorder: NSObject {
   @objc var isRecording: Bool = false
   @objc var isPaused: Bool = false
   @objc var converter: AVAudioConverter!
-  var fileHandle: FileHandle?
+  var writeFileHandle: FileHandle?
   var currentRecordingInfo: RecordingInfo?
+  
+  var onRecord: OnRecord?
   
   override init() {
     super.init()
@@ -65,7 +67,7 @@ class Recorder: NSObject {
     }
   }
   
-  func startRecording(info: RecordingInfo, _ completion: @escaping (NSData) -> ()) {
+  func startRecording(info: RecordingInfo) {
     currentRecordingInfo = info
     
     let mixerNode: AVAudioNode = downMixer
@@ -94,7 +96,7 @@ class Recorder: NSObject {
     do {
       let fileURL = Helper.recordingURL(for: info.encounterID)
       createFileIfNeeded()
-      fileHandle = try FileHandle(forWritingTo: fileURL)
+      writeFileHandle = try FileHandle(forWritingTo: fileURL)
     }
     catch {
       print(error)
@@ -133,7 +135,7 @@ class Recorder: NSObject {
               Helper.addBytesSaved(data as Data, recordingInfo: recordingInfo)
             }
             
-            completion(data)
+            this.onRecord?(data)
           }
         }
         else {
@@ -152,7 +154,7 @@ class Recorder: NSObject {
   }
   
   func writeDataToDisk(_ data: Data) {
-    guard let fileHandle = self.fileHandle else {
+    guard let fileHandle = self.writeFileHandle else {
       return
     }
     
@@ -195,7 +197,7 @@ class Recorder: NSObject {
       engine.stop()
       isRecording = false
       isPaused = false
-      fileHandle?.closeFile()
+      writeFileHandle?.closeFile()
       currentRecordingInfo = nil
     }
   }

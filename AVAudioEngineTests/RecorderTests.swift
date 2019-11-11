@@ -41,7 +41,7 @@ class RecorderTests: XCTestCase {
       XCTAssertNotNil(recorder.currentRecordingInfo)
       XCTAssertNotNil(recorder.converter)
       
-      let fileHandle = try! XCTUnwrap(recorder.fileHandle)
+      let fileHandle = try! XCTUnwrap(recorder.writeFileHandle)
       XCTAssertTrue(fileHandle.offsetInFile > 0)
       
       XCTAssertTrue(recorder.isRecording)
@@ -59,16 +59,16 @@ class RecorderTests: XCTestCase {
     
     let fileURL = AVAudioEngine.Helper.recordingURL(for: info.encounterID)
     recorder.createFileIfNeeded()
-    recorder.fileHandle = try! FileHandle(forWritingTo: fileURL)
+    recorder.writeFileHandle = try! FileHandle(forWritingTo: fileURL)
     
-    XCTAssertTrue(recorder.fileHandle!.offsetInFile == 0)
+    XCTAssertTrue(recorder.writeFileHandle!.offsetInFile == 0)
     
     let data = "Some text".data(using: String.Encoding.utf8)!
     recorder.writeDataToDisk(data)
     
     let fileManager = FileManager.default
     XCTAssertTrue(fileManager.fileExists(atPath: fileURL.path))
-    XCTAssertTrue(recorder.fileHandle!.offsetInFile > 0)
+    XCTAssertTrue(recorder.writeFileHandle!.offsetInFile > 0)
   }
   
   func testPauseRecording() {

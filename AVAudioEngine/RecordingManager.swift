@@ -16,6 +16,7 @@ let kAccessToken = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImZhMWQ3NzBlZWY5ZWFhNjU0MzY1ZGE5
 class RecordingManager: NSObject {
   var recorder: Recorder!
   var websocketManager: WebsocketManager<WebSocket>!
+  var readFileHandle: FileHandle?
   var isConfigChangePending: Bool = false
   var isSessionInterrupted: Bool = false
   var isRecording: Bool {
@@ -88,6 +89,14 @@ class RecordingManager: NSObject {
   
   func setupRecorder() {
     recorder = Recorder()
+    recorder.onRecord = {
+      [weak self] data in
+      guard let this = self else {
+        return
+      }
+      
+      this.websocketManager.send(data: data)
+    }
     
     NotificationCenter.default.addObserver(forName: NSNotification.Name.AVAudioEngineConfigurationChange, object: nil, queue: OperationQueue.main) {
       [weak self] (notification) in
@@ -119,17 +128,18 @@ class RecordingManager: NSObject {
   
   @objc func startRecording() {
     // TODO: Show spinner
-    guard let info = currentRecordingInfo else {
+    guard let info = self.currentRecordingInfo else {
       return
     }
     
-    websocketManager.connect(info: info) {
-      [weak self](_) in
-      // TODO: Hide spinner
-      self?.websocketManager.start()
-      self?.recorder.startRecording(info: info) { (data) in
-        self?.websocketManager.send(data: data)
-      }
+    let fileURL = Helper.recordingURL(for: info.encounterID)
+    try? FileManager.default.removeItem(at: fileURL)
+    
+    Defaults[.bytesProcessed] = [:]
+    
+    connectAndStartWebsocket {
+      [weak self] in
+      self?.recorder.startRecording(info: info)
     }
   }
   
@@ -138,26 +148,38 @@ class RecordingManager: NSObject {
   }
   
   @objc func resumeRecording() {
-    guard let info = currentRecordingInfo else {
-      return
-    }
-        
-    let resume = {
+    connectAndStartWebsocket {
       [weak self] in
       self?.recorder.resumeRecording()
-    }
-    
-    websocketManager.connect(info: info) { (_) in
-      resume()
     }
   }
   
   @objc func stopRecording() {
     recorder.pauseRecording()
+    readFileHandle?.seekToEndOfFile()
+    readFileHandle?.closeFile()
+    readFileHandle?.readabilityHandler = nil
     websocketManager.stop {
       [weak self] (_) in
       self?.recorder.stopRecording()
       self?.currentRecordingInfo = nil
+      
+      // TODO: Cleanup stored data from UserDefaults
+    }
+  }
+  
+  func connectAndStartWebsocket(_ completion: @escaping () -> ()) {
+    guard let info = currentRecordingInfo else {
+      return
+    }
+    
+    websocketManager.connect(info: info) {
+      [unowned self](_, shouldStart) in
+      if shouldStart {
+        self.websocketManager.start()
+      }
+      
+      completion()
     }
   }
 }
