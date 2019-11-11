@@ -9,6 +9,8 @@
 import UIKit
 import AVFoundation
 import SwiftyUserDefaults
+import Starscream
+import Reachability
 
 let kAccessToken = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImZhMWQ3NzBlZWY5ZWFhNjU0MzY1ZGE5MDhjNDIzY2NkNzY4ODkxMDUiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiQXJ2aW5kaCBTdWt1bWFyIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL2NsaWVudC1kZXYtZTMwMWQiLCJhdWQiOiJjbGllbnQtZGV2LWUzMDFkIiwiYXV0aF90aW1lIjoxNTcxMzEzNDMwLCJ1c2VyX2lkIjoiVTN4RGZUdUQ1ZGZHdll5M3F0U0FSVTkwVldaMiIsInN1YiI6IlUzeERmVHVENWRmR3ZZeTNxdFNBUlU5MFZXWjIiLCJpYXQiOjE1NzEzMTM0MzAsImV4cCI6MTU3MTMxNzAzMCwiZW1haWwiOiJhcnZpbmRoQGFicmlkZ2UuYWkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJhcnZpbmRoQGFicmlkZ2UuYWkiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.WJPATxMPQhYzHIlRF_86nPa7YHPBKAVKbBHXFZXUFIAMToqSHgU-4022jWdNj9n3ML2tbVjKafbpqw-OjS6TPdcVuuz0HJ_pm72N3db17SXk9fc8MvvRSP29nppKXK3OiBBnAI9cUdL-bhIaQAlk-ld7ruBiJFEKDSX2ZGO-JnExZc7RfmfVQM6JXQbf6rMI7RKklKDWQZufl65aFcz8MXIZsGsoxs7HJEW6exOUtr28c2641aBfTV_xmjttn3SUbDLW7Jv4GeupJqFGYLaSgu8yXwY04-b42nYATjcG9iJUU7uh6uyVlXfkY7StZioRsxKXTyY7WjETqLDxlo0r8g"
 
@@ -16,9 +18,13 @@ let kAccessToken = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImZhMWQ3NzBlZWY5ZWFhNjU0MzY1ZGE5
 class RecordingManager: NSObject {
   var recorder: Recorder!
   var websocketManager: WebsocketManager<WebSocket>!
+  var reachability: Reachability!
   var readFileHandle: FileHandle?
+
   var isConfigChangePending: Bool = false
   var isSessionInterrupted: Bool = false
+  var wasConnectionInterrupted: Bool = false
+  
   var isRecording: Bool {
     return recorder.isRecording
   }
@@ -37,9 +43,28 @@ class RecordingManager: NSObject {
   override init() {
     super.init()
     
+    setupReachability()
     setupSession()
     setupWebsocket()
     setupRecorder()
+  }
+  
+  func setupReachability() {
+    reachability = try! Reachability()
+    reachability.whenReachable = {
+      [unowned self] reachability in
+      if self.wasConnectionInterrupted {
+        self.connectAndStartWebsocket {
+          [weak self] in
+          // Nothing to do here, data will be sent over websocket in recorder's onRecord
+        }
+      }
+    }
+    
+    reachability.whenUnreachable = {
+      [unowned self] reachability in
+      self.wasConnectionInterrupted = true
+    }
   }
   
   func setupSession() {
@@ -82,8 +107,25 @@ class RecordingManager: NSObject {
   
   func setupWebsocket() {
     websocketManager = WebsocketManager(accessToken: kAccessToken)
+    
+    websocketManager.onMessage = {
+      [weak self] text in
+      
+      
+    }
+    
     websocketManager.onClose = {
-      _ in 
+      [weak self] wasClean in
+      
+      guard let this = self else {
+        return
+      }
+      
+      if !wasClean {
+        if this.reachability.connection == .unavailable {
+          
+        }
+      }
     }
   }
   
