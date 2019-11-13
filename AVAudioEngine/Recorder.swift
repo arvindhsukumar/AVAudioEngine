@@ -13,10 +13,16 @@ import SwiftyUserDefaults
 struct RecordingInfo: Equatable {
   var encounterID: String
   var userID: String
+  var recordingNumber: Int
   
   init(info: [String: AnyHashable]) {
     self.encounterID = info["encounterID"]?.base as! String
     self.userID = info["userID"]?.base as! String
+    self.recordingNumber = 0
+  }
+  
+  mutating func incrementRecordingNumber() {
+    self.recordingNumber += 1
   }
   
   static func ==(lhs: RecordingInfo, rhs: RecordingInfo) -> Bool {

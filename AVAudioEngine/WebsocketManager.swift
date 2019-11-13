@@ -121,7 +121,7 @@ class WebsocketManager<S: NSObject>: NSObject where S: Socket {
       return
     }
     
-    send(message: "{\"type\": \"start\",\"encounter_id\": \"\(info.encounterID)\",\"user_id\": \"\(info.userID)\",\"recording_number\": 0}")
+    send(message: "{\"type\": \"start\",\"encounter_id\": \"\(info.encounterID)\",\"user_id\": \"\(info.userID)\",\"recording_number\": \(info.recordingNumber)}")
   }
   
   @objc func stop(_ onStop: @escaping WebsocketOnClose) {

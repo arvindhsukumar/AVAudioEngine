@@ -12,7 +12,7 @@ import SwiftyUserDefaults
 import Starscream
 import Reachability
 
-let kAccessToken = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImZhMWQ3NzBlZWY5ZWFhNjU0MzY1ZGE5MDhjNDIzY2NkNzY4ODkxMDUiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiQXJ2aW5kaCBTdWt1bWFyIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL2NsaWVudC1kZXYtZTMwMWQiLCJhdWQiOiJjbGllbnQtZGV2LWUzMDFkIiwiYXV0aF90aW1lIjoxNTcxMzEzNDMwLCJ1c2VyX2lkIjoiVTN4RGZUdUQ1ZGZHdll5M3F0U0FSVTkwVldaMiIsInN1YiI6IlUzeERmVHVENWRmR3ZZeTNxdFNBUlU5MFZXWjIiLCJpYXQiOjE1NzEzMTM0MzAsImV4cCI6MTU3MTMxNzAzMCwiZW1haWwiOiJhcnZpbmRoQGFicmlkZ2UuYWkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJhcnZpbmRoQGFicmlkZ2UuYWkiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.WJPATxMPQhYzHIlRF_86nPa7YHPBKAVKbBHXFZXUFIAMToqSHgU-4022jWdNj9n3ML2tbVjKafbpqw-OjS6TPdcVuuz0HJ_pm72N3db17SXk9fc8MvvRSP29nppKXK3OiBBnAI9cUdL-bhIaQAlk-ld7ruBiJFEKDSX2ZGO-JnExZc7RfmfVQM6JXQbf6rMI7RKklKDWQZufl65aFcz8MXIZsGsoxs7HJEW6exOUtr28c2641aBfTV_xmjttn3SUbDLW7Jv4GeupJqFGYLaSgu8yXwY04-b42nYATjcG9iJUU7uh6uyVlXfkY7StZioRsxKXTyY7WjETqLDxlo0r8g"
+let kAccessToken = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjI1MDgxMWNkYzYwOWQ5MGY5ODE1MTE5MWIyYmM5YmQwY2ViOWMwMDQiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiQXJ2aW5kaCBTdWt1bWFyIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL2NsaWVudC1kZXYtZTMwMWQiLCJhdWQiOiJjbGllbnQtZGV2LWUzMDFkIiwiYXV0aF90aW1lIjoxNTczNDc2MzY0LCJ1c2VyX2lkIjoiVTN4RGZUdUQ1ZGZHdll5M3F0U0FSVTkwVldaMiIsInN1YiI6IlUzeERmVHVENWRmR3ZZeTNxdFNBUlU5MFZXWjIiLCJpYXQiOjE1NzM0NzYzNjQsImV4cCI6MTU3MzQ3OTk2NCwiZW1haWwiOiJhcnZpbmRoQGFicmlkZ2UuYWkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJhcnZpbmRoQGFicmlkZ2UuYWkiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.Td2o5rgW7XykRGPW_xdun5bTzIy2zH1UT1N8YKOfZdk1-sjVRwV7nWA6FXOP4UXHBwVtegwG79sMr9CBWoTly7mjxpSNTylwSJWE4Dp0IfTcKt25hUJwt6IW3sQKzB4kYUvaCHdvnpXqmahm52p9p9rCTQLL9L0MknwD1pEegSf8cn9q1r6FDELWp33RiRp2UNKD984kHwTr_3jn6m6j_NUpRuXeauXukCX8HW59vLDR3LoC-4aLHy1hXZcwbJg3hCOFkp4qsGVrY4e8E2zU86kmORVAwx9JKYOd3CA8Iykx_dFzB8PUOIMKIoVKBaSHxKgKFBIfeP_7L1aPX5ZitQ"
 
 @objc(RecordingManager)
 class RecordingManager: NSObject {
@@ -22,9 +22,10 @@ class RecordingManager: NSObject {
   var readFileHandle: FileHandle?
 
   var isConfigChangePending: Bool = false
-  var isSessionInterrupted: Bool = false
+  var isAudioInterrupted: Bool = false
+  var isConnectionInterrupted: Bool = false
   var wasConnectionInterrupted: Bool = false
-  
+
   var isRecording: Bool {
     return recorder.isRecording
   }
@@ -53,16 +54,19 @@ class RecordingManager: NSObject {
     reachability = try! Reachability()
     reachability.whenReachable = {
       [unowned self] reachability in
-      if self.wasConnectionInterrupted {
+      if self.isConnectionInterrupted {
+        self.currentRecordingInfo?.incrementRecordingNumber()
         self.connectAndStartWebsocket {
           [weak self] in
           // Nothing to do here, data will be sent over websocket in recorder's onRecord
         }
+        self.isConnectionInterrupted = false
       }
     }
     
     reachability.whenUnreachable = {
       [unowned self] reachability in
+      self.isConnectionInterrupted = true
       self.wasConnectionInterrupted = true
     }
   }
@@ -95,10 +99,10 @@ class RecordingManager: NSObject {
 
     switch interruptionType {
     case .began:
-      isSessionInterrupted = true
+      isAudioInterrupted = true
       pauseRecording()
     case .ended:
-      isSessionInterrupted = false
+      isAudioInterrupted = false
       resumeRecording()
     @unknown default:
       fatalError()
@@ -149,7 +153,7 @@ class RecordingManager: NSObject {
       
       this.isConfigChangePending = true
       
-      if (!this.isSessionInterrupted) {
+      if (!this.isAudioInterrupted) {
         this.recorder.makeEngineConnections()
       }
       else {
