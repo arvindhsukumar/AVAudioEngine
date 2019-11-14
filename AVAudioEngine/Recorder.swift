@@ -100,7 +100,7 @@ class Recorder: NSObject {
     }
     
     do {
-      let fileURL = Helper.recordingURL(for: info.encounterID)
+      let fileURL = Helper.recordingURL(forEncounterID: info.encounterID)
       createFileIfNeeded()
       writeFileHandle = try FileHandle(forWritingTo: fileURL)
     }
@@ -178,7 +178,7 @@ class Recorder: NSObject {
     }
     
     let fileManager = FileManager.default
-    let fileURL = Helper.recordingURL(for: info.encounterID)
+    let fileURL = Helper.recordingURL(forEncounterID: info.encounterID)
     let fileExists = fileManager.fileExists(atPath: fileURL.path)
     
     if !fileExists {

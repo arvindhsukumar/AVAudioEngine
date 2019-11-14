@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Moya
 
 let kIPAddress: String = "192.168.1.133"
 let isLocal: Bool = false
@@ -28,4 +29,60 @@ func websocketURL(isWS: Bool) -> URL {
   }
   
   return urlComponents.url!
+}
+
+enum SocketAPI {
+  case upload(params: UploadParams)
+}
+
+extension SocketAPI: TargetType {
+  var baseURL: URL {
+    switch self {
+    case .upload(_):
+      return URL(string: "https://upload-service-dot-client-dev-e301d.appspot.com")!
+    default:
+      return websocketURL(isWS: false)
+    }
+  }
+  
+  var path: String {
+    switch self {
+    case .upload(_): return "/upload"
+    }
+  }
+  
+  var method: Moya.Method {
+    switch self {
+    case .upload(_): return .post
+    }
+  }
+  
+  var sampleData: Data {
+    switch self {
+    case .upload(_): return "".data(using: String.Encoding.utf8)!
+    }
+  }
+  
+  var task: Task {
+    switch self {
+    case .upload(let params):
+      let formData = [
+        MultipartFormData(provider: MultipartFormData.FormDataProvider.file(params.url), name: "AVAudioEngineTest")
+      ]
+      
+      let urlParams = [
+        "uid": params.uid,
+        "uuid": params.encounterID,
+        "ext": params.extension
+      ]
+      
+      return Task.uploadCompositeMultipart(formData, urlParameters: urlParams)
+    default:
+      break
+    }
+  }
+  
+  var headers: [String : String]? {
+    return nil
+  }
 }

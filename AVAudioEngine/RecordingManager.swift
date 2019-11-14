@@ -178,7 +178,7 @@ class RecordingManager: NSObject {
       return
     }
     
-    let fileURL = Helper.recordingURL(for: info.encounterID)
+    let fileURL = Helper.recordingURL(forEncounterID: info.encounterID)
     try? FileManager.default.removeItem(at: fileURL)
     
     Defaults[.bytesProcessed] = [:]

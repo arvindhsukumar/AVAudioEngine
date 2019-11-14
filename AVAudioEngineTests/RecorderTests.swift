@@ -57,7 +57,7 @@ class RecorderTests: XCTestCase {
     let recorder: Recorder = self.recorder
     recorder.currentRecordingInfo = info
     
-    let fileURL = AVAudioEngine.Helper.recordingURL(for: info.encounterID)
+    let fileURL = AVAudioEngine.Helper.recordingURL(forEncounterID: info.encounterID)
     recorder.createFileIfNeeded()
     recorder.writeFileHandle = try! FileHandle(forWritingTo: fileURL)
     

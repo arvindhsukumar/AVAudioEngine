@@ -139,14 +139,14 @@ class ViewController: UIViewController {
       }      
     }
     else {
-      manager.prepareRecording(["encounterID": "test-encounter", "userID": "1"])
+      manager.prepareRecording(["encounterID": "3", "userID": "arvindh@abridge.com"])
       manager.startRecording()
       button.setTitle("Pause", for: UIControl.State.normal)
     }
   }
   
   @objc func playRecording() {
-    let url = URL(string: NSTemporaryDirectory().appending("mixerOutput.caf"))!
+    let url = Helper.recordingURL(forEncounterID: "2")
 //    audioFile = try! AVAudioFile(forReading: url)
 //
 //    setupEngine()
@@ -165,7 +165,7 @@ class ViewController: UIViewController {
     let attributes = try! FileManager.default.attributesOfItem(atPath: url.path)
     let fileURL = URL(fileURLWithPath: url.path)
 //    let data = try! FileManager.default.contents(atPath: url.path)
-    let activity = UIActivityViewController(activityItems: [fileURL], applicationActivities: nil)
+    let activity = UIActivityViewController(activityItems: [url], applicationActivities: nil)
     present(activity, animated: true, completion: nil)
   }
 }

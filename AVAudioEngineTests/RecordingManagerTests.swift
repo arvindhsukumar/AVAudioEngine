@@ -209,7 +209,7 @@ class RecordingManagerTests: XCTestCase {
       
       XCTAssertTrue(manager.isRecording)
       XCTAssertTrue(manager.isPaused)
-      XCTAssertTrue(manager.isSessionInterrupted)
+      XCTAssertTrue(manager.isAudioInterrupted)
       
       expectation.fulfill()
     }
@@ -231,7 +231,7 @@ class RecordingManagerTests: XCTestCase {
       
       XCTAssertTrue(manager.isRecording)
       XCTAssertFalse(manager.isPaused)
-      XCTAssertFalse(manager.isSessionInterrupted)
+      XCTAssertFalse(manager.isAudioInterrupted)
       
       expectation.fulfill()
     }

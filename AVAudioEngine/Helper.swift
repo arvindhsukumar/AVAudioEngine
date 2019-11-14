@@ -20,8 +20,8 @@ class Helper {
     return FileManager.default.temporaryDirectory
   }
 
-  static func recordingURL(for recordingID: String) -> URL {
-    return Helper.getTemporaryDirectory().appendingPathComponent("recording-\(recordingID).flac")
+  static func recordingURL(forEncounterID encounterID: String) -> URL {
+    return Helper.getTemporaryDirectory().appendingPathComponent("recording-\(encounterID).flac")
   }
 }
 
