@@ -13,29 +13,29 @@ import Starscream
 import Reachability
 
 @objc(RecordingManager)
-class RecordingManager: NSObject {
-  var recorder: Recorder!
-  var websocketManager: WebsocketManager<WebSocket>!
-  var uploadManager: UploadManager! = UploadManager()
-  var reachability: Reachability!
-  var readFileHandle: FileHandle?
+public class RecordingManager: NSObject {
+  public var recorder: Recorder!
+  public var websocketManager: WebsocketManager<WebSocket>!
+  public var uploadManager: UploadManager! = UploadManager()
+  public var reachability: Reachability!
+  public var readFileHandle: FileHandle?
 
-  var isConfigChangePending: Bool = false
-  var isAudioInterrupted: Bool = false
-  var isConnectionInterrupted: Bool = false
-  var wasConnectionInterrupted: Bool = false
+  public var isConfigChangePending: Bool = false
+  public var isAudioInterrupted: Bool = false
+  public var isConnectionInterrupted: Bool = false
+  public var wasConnectionInterrupted: Bool = false
 
-  var isRecording: Bool {
+  public var isRecording: Bool {
     return recorder.isRecording
   }
   
-  var isPaused: Bool {
+  public var isPaused: Bool {
     return recorder.isPaused
   }
   
-  var currentRecordingInfo: RecordingInfo?
+  public var currentRecordingInfo: RecordingInfo?
   
-  static let shared: RecordingManager = {
+  public static let shared: RecordingManager = {
     let manager = RecordingManager()
     return manager
   }()
@@ -172,7 +172,7 @@ class RecordingManager: NSObject {
     }
   }
   
-  @objc func prepareRecording(_ info: [String: AnyHashable]) {
+  @objc public func prepareRecording(_ info: [String: AnyHashable]) {
     let info = RecordingInfo(info: info)
     if isRecording {
       // Recording already happening, but another start request came in.
@@ -182,7 +182,7 @@ class RecordingManager: NSObject {
     currentRecordingInfo = info
   }
   
-  @objc func startRecording() {
+  @objc public func startRecording() {
     // TODO: Show spinner
     guard let info = self.currentRecordingInfo else {
       return
@@ -199,18 +199,18 @@ class RecordingManager: NSObject {
     }
   }
   
-  @objc func pauseRecording() {
+  @objc public func pauseRecording() {
     recorder.pauseRecording()
   }
   
-  @objc func resumeRecording() {
+  @objc public func resumeRecording() {
     connectAndStartWebsocket {
       [weak self] in
       self?.recorder.resumeRecording()
     }
   }
   
-  @objc func stopRecording() {
+  @objc public func stopRecording() {
     recorder.pauseRecording()
     readFileHandle?.seekToEndOfFile()
     readFileHandle?.closeFile()

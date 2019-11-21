@@ -8,11 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		631C94F6613F2AD74774F04C /* Pods_AVAudioEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFCD3A0B16CEE65CEFC53482 /* Pods_AVAudioEngine.framework */; };
-		655D137C22E9B4D40021C46A /* libFLACiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 655D137A22E9B4D40021C46A /* libFLACiOS.a */; };
-		655D137D22E9B4D40021C46A /* FLACiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 655D137B22E9B4D40021C46A /* FLACiOS.framework */; };
-		655D138022E9BF410021C46A /* encode_single_16bit.c in Sources */ = {isa = PBXBuildFile; fileRef = 655D137F22E9BF410021C46A /* encode_single_16bit.c */; };
-		6582C30A22E8698D00748F62 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6582C30922E8698C00748F62 /* Extensions.swift */; };
-		6598392822FAD05B0052F485 /* Recorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6598392722FAD05B0052F485 /* Recorder.swift */; };
 		65FADC4522DDBED10026F5E0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FADC4422DDBED10026F5E0 /* AppDelegate.swift */; };
 		65FADC4722DDBED10026F5E0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FADC4622DDBED10026F5E0 /* ViewController.swift */; };
 		65FADC4A22DDBED10026F5E0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65FADC4822DDBED10026F5E0 /* Main.storyboard */; };
@@ -20,18 +15,9 @@
 		65FADC4F22DDBED20026F5E0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65FADC4D22DDBED20026F5E0 /* LaunchScreen.storyboard */; };
 		65FADC5A22DDBED20026F5E0 /* AVAudioEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FADC5922DDBED20026F5E0 /* AVAudioEngineTests.swift */; };
 		65FADC6522DDBED20026F5E0 /* AVAudioEngineUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FADC6422DDBED20026F5E0 /* AVAudioEngineUITests.swift */; };
-		D402404323605AAA0005BF44 /* RecordingManagerBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = D402404223605AAA0005BF44 /* RecordingManagerBridge.m */; };
-		D410206923866BA400166BCB /* UploadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D410206823866BA400166BCB /* UploadManager.swift */; };
-		D414A988237D690C00C4EB80 /* Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = D414A987237D690C00C4EB80 /* Upload.swift */; };
-		D450B04A23632E0400D77965 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = D450B04923632E0400D77965 /* Protocols.swift */; };
 		D450B04C23632F2300D77965 /* MockSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = D450B04B23632F2300D77965 /* MockSocket.swift */; };
-		D456977F232BCC7100766183 /* WebsocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D456977E232BCC7100766183 /* WebsocketManager.swift */; };
-		D46CB9BF2355F7310058300B /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46CB9BE2355F7310058300B /* Helper.swift */; };
 		D48D0FE5235847A300C8356F /* WebsocketManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48D0FE4235847A300C8356F /* WebsocketManagerTests.swift */; };
 		D48D0FE723584BB500C8356F /* RecordingManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48D0FE623584BB500C8356F /* RecordingManagerTests.swift */; };
-		D4A180092368411E00F51426 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A180082368411E00F51426 /* API.swift */; };
-		D4AB71DB23572AA10016251A /* RecordingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AB71DA23572AA10016251A /* RecordingManager.swift */; };
-		D4AB71DD235747E50016251A /* Defaults+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AB71DC235747E50016251A /* Defaults+Extensions.swift */; };
 		D4AB71DF235764010016251A /* RecorderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AB71DE235764010016251A /* RecorderTests.swift */; };
 		D4AB71E1235765C20016251A /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AB71E0235765C20016251A /* Helper.swift */; };
 		E3FDA45D12142D9E24AF9D8A /* Pods_AVAudioEngineUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ACC15D85519502CCB90B852 /* Pods_AVAudioEngineUITests.framework */; };
@@ -61,12 +47,6 @@
 		1D340E3E4815F46ED18B6A13 /* Pods-AVAudioEngineTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AVAudioEngineTests.release.xcconfig"; path = "Target Support Files/Pods-AVAudioEngineTests/Pods-AVAudioEngineTests.release.xcconfig"; sourceTree = "<group>"; };
 		3E13B20C42D62E14EE31BB48 /* Pods-AVAudioEngineTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AVAudioEngineTests.debug.xcconfig"; path = "Target Support Files/Pods-AVAudioEngineTests/Pods-AVAudioEngineTests.debug.xcconfig"; sourceTree = "<group>"; };
 		4EF297EEC91BBDA1CA6F4DE2 /* Pods-AVAudioEngine.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AVAudioEngine.release.xcconfig"; path = "Target Support Files/Pods-AVAudioEngine/Pods-AVAudioEngine.release.xcconfig"; sourceTree = "<group>"; };
-		655D137A22E9B4D40021C46A /* libFLACiOS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFLACiOS.a; sourceTree = "<group>"; };
-		655D137B22E9B4D40021C46A /* FLACiOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FLACiOS.framework; sourceTree = "<group>"; };
-		655D137E22E9BF410021C46A /* encode_single_16bit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = encode_single_16bit.h; sourceTree = "<group>"; };
-		655D137F22E9BF410021C46A /* encode_single_16bit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = encode_single_16bit.c; sourceTree = "<group>"; };
-		6582C30922E8698C00748F62 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		6598392722FAD05B0052F485 /* Recorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recorder.swift; sourceTree = "<group>"; };
 		65FADC4122DDBED10026F5E0 /* AVAudioEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AVAudioEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65FADC4422DDBED10026F5E0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		65FADC4622DDBED10026F5E0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -85,18 +65,9 @@
 		AFCD3A0B16CEE65CEFC53482 /* Pods_AVAudioEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AVAudioEngine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C287FDE882BDBDCB95048140 /* Pods-AVAudioEngineUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AVAudioEngineUITests.debug.xcconfig"; path = "Target Support Files/Pods-AVAudioEngineUITests/Pods-AVAudioEngineUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		D133BD10C5E5F56769DEAC91 /* Pods-AVAudioEngine.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AVAudioEngine.debug.xcconfig"; path = "Target Support Files/Pods-AVAudioEngine/Pods-AVAudioEngine.debug.xcconfig"; sourceTree = "<group>"; };
-		D402404223605AAA0005BF44 /* RecordingManagerBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RecordingManagerBridge.m; sourceTree = "<group>"; };
-		D410206823866BA400166BCB /* UploadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadManager.swift; sourceTree = "<group>"; };
-		D414A987237D690C00C4EB80 /* Upload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upload.swift; sourceTree = "<group>"; };
-		D450B04923632E0400D77965 /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		D450B04B23632F2300D77965 /* MockSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSocket.swift; sourceTree = "<group>"; };
-		D456977E232BCC7100766183 /* WebsocketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsocketManager.swift; sourceTree = "<group>"; };
-		D46CB9BE2355F7310058300B /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		D48D0FE4235847A300C8356F /* WebsocketManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsocketManagerTests.swift; sourceTree = "<group>"; };
 		D48D0FE623584BB500C8356F /* RecordingManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingManagerTests.swift; sourceTree = "<group>"; };
-		D4A180082368411E00F51426 /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
-		D4AB71DA23572AA10016251A /* RecordingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingManager.swift; sourceTree = "<group>"; };
-		D4AB71DC235747E50016251A /* Defaults+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Defaults+Extensions.swift"; sourceTree = "<group>"; };
 		D4AB71DE235764010016251A /* RecorderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderTests.swift; sourceTree = "<group>"; };
 		D4AB71E0235765C20016251A /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -106,9 +77,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				655D137D22E9B4D40021C46A /* FLACiOS.framework in Frameworks */,
 				631C94F6613F2AD74774F04C /* Pods_AVAudioEngine.framework in Frameworks */,
-				655D137C22E9B4D40021C46A /* libFLACiOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -141,24 +110,12 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		655D137922E9B4D40021C46A /* FLAC */ = {
-			isa = PBXGroup;
-			children = (
-				655D137F22E9BF410021C46A /* encode_single_16bit.c */,
-				655D137E22E9BF410021C46A /* encode_single_16bit.h */,
-				655D137A22E9B4D40021C46A /* libFLACiOS.a */,
-				655D137B22E9B4D40021C46A /* FLACiOS.framework */,
-			);
-			path = FLAC;
-			sourceTree = "<group>";
-		};
 		65FADC3822DDBED10026F5E0 = {
 			isa = PBXGroup;
 			children = (
 				65FADC4322DDBED10026F5E0 /* AVAudioEngine */,
 				65FADC5822DDBED20026F5E0 /* AVAudioEngineTests */,
 				65FADC6322DDBED20026F5E0 /* AVAudioEngineUITests */,
-				655D137922E9B4D40021C46A /* FLAC */,
 				65FADC4222DDBED10026F5E0 /* Products */,
 				9666484D0352DB4285409312 /* Pods */,
 				5ACE47A0B8FA33777D6252AB /* Frameworks */,
@@ -178,8 +135,6 @@
 		65FADC4322DDBED10026F5E0 /* AVAudioEngine */ = {
 			isa = PBXGroup;
 			children = (
-				D410206B23868B2800166BCB /* Assets */,
-				D410206A23868B1D00166BCB /* Classes */,
 				65FADC4422DDBED10026F5E0 /* AppDelegate.swift */,
 				65FADC4622DDBED10026F5E0 /* ViewController.swift */,
 				65FADC4822DDBED10026F5E0 /* Main.storyboard */,
@@ -225,71 +180,6 @@
 				7FD2692B9451C848DF1112BC /* Pods-AVAudioEngineUITests.release.xcconfig */,
 			);
 			path = Pods;
-			sourceTree = "<group>";
-		};
-		D410206A23868B1D00166BCB /* Classes */ = {
-			isa = PBXGroup;
-			children = (
-				D410207023868B8100166BCB /* React Native */,
-				D410206F23868B7100166BCB /* Utils */,
-				D410206E23868B5400166BCB /* Upload */,
-				D410206D23868B4300166BCB /* Socket */,
-				D410206C23868B3300166BCB /* Recording */,
-			);
-			path = Classes;
-			sourceTree = "<group>";
-		};
-		D410206B23868B2800166BCB /* Assets */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Assets;
-			sourceTree = "<group>";
-		};
-		D410206C23868B3300166BCB /* Recording */ = {
-			isa = PBXGroup;
-			children = (
-				D4AB71DA23572AA10016251A /* RecordingManager.swift */,
-				6598392722FAD05B0052F485 /* Recorder.swift */,
-			);
-			path = Recording;
-			sourceTree = "<group>";
-		};
-		D410206D23868B4300166BCB /* Socket */ = {
-			isa = PBXGroup;
-			children = (
-				D456977E232BCC7100766183 /* WebsocketManager.swift */,
-			);
-			path = Socket;
-			sourceTree = "<group>";
-		};
-		D410206E23868B5400166BCB /* Upload */ = {
-			isa = PBXGroup;
-			children = (
-				D4A180082368411E00F51426 /* API.swift */,
-				D414A987237D690C00C4EB80 /* Upload.swift */,
-				D410206823866BA400166BCB /* UploadManager.swift */,
-			);
-			path = Upload;
-			sourceTree = "<group>";
-		};
-		D410206F23868B7100166BCB /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-				6582C30922E8698C00748F62 /* Extensions.swift */,
-				D46CB9BE2355F7310058300B /* Helper.swift */,
-				D4AB71DC235747E50016251A /* Defaults+Extensions.swift */,
-				D450B04923632E0400D77965 /* Protocols.swift */,
-			);
-			path = Utils;
-			sourceTree = "<group>";
-		};
-		D410207023868B8100166BCB /* React Native */ = {
-			isa = PBXGroup;
-			children = (
-				D402404223605AAA0005BF44 /* RecordingManagerBridge.m */,
-			);
-			path = "React Native";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -519,20 +409,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D402404323605AAA0005BF44 /* RecordingManagerBridge.m in Sources */,
-				D4AB71DB23572AA10016251A /* RecordingManager.swift in Sources */,
 				65FADC4722DDBED10026F5E0 /* ViewController.swift in Sources */,
-				D450B04A23632E0400D77965 /* Protocols.swift in Sources */,
-				D410206923866BA400166BCB /* UploadManager.swift in Sources */,
-				D456977F232BCC7100766183 /* WebsocketManager.swift in Sources */,
-				D4A180092368411E00F51426 /* API.swift in Sources */,
-				D414A988237D690C00C4EB80 /* Upload.swift in Sources */,
-				D4AB71DD235747E50016251A /* Defaults+Extensions.swift in Sources */,
 				65FADC4522DDBED10026F5E0 /* AppDelegate.swift in Sources */,
-				655D138022E9BF410021C46A /* encode_single_16bit.c in Sources */,
-				6598392822FAD05B0052F485 /* Recorder.swift in Sources */,
-				6582C30A22E8698D00748F62 /* Extensions.swift in Sources */,
-				D46CB9BF2355F7310058300B /* Helper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

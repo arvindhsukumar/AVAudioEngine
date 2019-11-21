@@ -10,51 +10,51 @@ import UIKit
 import AVFoundation
 import SwiftyUserDefaults
 
-struct RecordingInfo: Equatable {
-  var encounterID: String
-  var userID: String
-  var recordingNumber: Int
-  var token: String
+public struct RecordingInfo: Equatable {
+  public var encounterID: String
+  public var userID: String
+  public var recordingNumber: Int
+  public var token: String
   
-  init(info: [String: AnyHashable]) {
+  public init(info: [String: AnyHashable]) {
     self.encounterID = info["encounterID"]?.base as! String
     self.userID = info["userID"]?.base as! String
     self.recordingNumber = 0
     self.token = info["token"]?.base as? String ?? ""
   }
   
-  mutating func incrementRecordingNumber() {
+  mutating public func incrementRecordingNumber() {
     self.recordingNumber += 1
   }
   
-  var uploadParams: UploadParams {
+  public var uploadParams: UploadParams {
     return UploadParams(uid: userID, encounterID: encounterID, token: token, extension: "flac")
   }
   
-  static func ==(lhs: RecordingInfo, rhs: RecordingInfo) -> Bool {
+  static public func ==(lhs: RecordingInfo, rhs: RecordingInfo) -> Bool {
     return (lhs.encounterID == rhs.encounterID) && (lhs.userID == rhs.userID)
   }
 }
 
-typealias OnRecord = (NSData) -> Void
+public typealias OnRecord = (NSData) -> Void
 
-class Recorder: NSObject {
-  @objc var engine: AVAudioEngine!
-  @objc var downMixer: AVAudioMixerNode!
-  @objc var isRecording: Bool = false
-  @objc var isPaused: Bool = false
-  @objc var converter: AVAudioConverter!
-  var writeFileHandle: FileHandle?
-  var currentRecordingInfo: RecordingInfo?
+public class Recorder: NSObject {
+  @objc public var engine: AVAudioEngine!
+  @objc public var downMixer: AVAudioMixerNode!
+  @objc public var isRecording: Bool = false
+  @objc public var isPaused: Bool = false
+  @objc public var converter: AVAudioConverter!
+  public var writeFileHandle: FileHandle?
+  public var currentRecordingInfo: RecordingInfo?
   
-  var onRecord: OnRecord?
+  public var onRecord: OnRecord?
   
   override init() {
     super.init()
     setup()
   }
   
-  @objc func setup() {
+  @objc public func setup() {
     engine = AVAudioEngine()
     downMixer = AVAudioMixerNode()
     engine.attach(downMixer)
@@ -62,7 +62,7 @@ class Recorder: NSObject {
     engine.prepare()
   }
   
-  @objc func makeEngineConnections() {
+  @objc public func makeEngineConnections() {
     let inputNode = engine.inputNode
     engine.connect(inputNode, to: downMixer, format: inputNode.outputFormat(forBus: 0))
     
@@ -70,7 +70,7 @@ class Recorder: NSObject {
     engine.connect(downMixer, to: engine.mainMixerNode, format: downMixerFormat)
   }
   
-  func startEngine() {
+  public func startEngine() {
     do {
       try engine.start()
     }
@@ -79,7 +79,7 @@ class Recorder: NSObject {
     }
   }
   
-  func startRecording(info: RecordingInfo) {
+  public func startRecording(info: RecordingInfo) {
     currentRecordingInfo = info
     
     let mixerNode: AVAudioNode = downMixer
@@ -192,17 +192,17 @@ class Recorder: NSObject {
     }
   }
   
-  @objc func pauseRecording() {
+  @objc public func pauseRecording() {
     self.engine.pause()
     isPaused = true
   }
   
-  @objc func resumeRecording() {
+  @objc public func resumeRecording() {
     startEngine()
     isPaused = false
   }
   
-  @objc func stopRecording() {
+  @objc public func stopRecording() {
     if self.isRecording {
       let mixerNode: AVAudioNode = downMixer
       mixerNode.removeTap(onBus: 0)

@@ -9,8 +9,8 @@
 import UIKit
 import Moya
 
-class UploadManager: NSObject {
-  var provider: MoyaProvider<API>
+public class UploadManager: NSObject {
+  private var provider: MoyaProvider<API>
   
   init(provider: MoyaProvider<API> = MoyaProvider<API>()) {
     self.provider = provider

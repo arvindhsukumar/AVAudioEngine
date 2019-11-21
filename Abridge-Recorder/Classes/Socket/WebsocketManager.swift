@@ -13,7 +13,7 @@ typealias WebsocketOnConnect = ((_ connected: Bool, _ shouldStart: Bool) -> Void
 typealias WebsocketOnClose = ((_ wasClean: Bool) -> Void)
 typealias WebsocketOnMessage = ((_ message: String) -> Void)
 
-class WebsocketManager<S: NSObject>: NSObject where S: Socket {
+public class WebsocketManager<S: NSObject>: NSObject where S: Socket {
   var socket: S?
   var onConnect: WebsocketOnConnect?
   var onStop: WebsocketOnClose? // For when user stops recording
@@ -144,7 +144,7 @@ class WebsocketManager<S: NSObject>: NSObject where S: Socket {
 }
 
 extension WebSocket: Socket {
-  static func make(request: URLRequest, protocols: [String]?) -> Self {
+  public static func make(request: URLRequest, protocols: [String]?) -> Self {
     return WebSocket(request: request, protocols: protocols, stream: FoundationStream()) as! Self
   }
 

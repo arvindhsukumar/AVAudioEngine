@@ -41,10 +41,7 @@ target 'AVAudioEngine' do
 
   # Pods for AVAudioEngine
   pod 'SnapKit'
-  pod 'Starscream'
-  pod 'SwiftyUserDefaults'
-  pod 'ReachabilitySwift'
-  pod 'Moya'
+  pod 'Abridge-Recorder', :path => '../'
 
   react_native_pods
   

@@ -9,7 +9,7 @@
 import Foundation
 import Starscream
 
-protocol Socket: class {
+public protocol Socket: class {
   var isConnected: Bool {get}
   var onConnect: (() -> Void)? {get set}
   var onDisconnect: ((Error?) -> Void)? {get set}

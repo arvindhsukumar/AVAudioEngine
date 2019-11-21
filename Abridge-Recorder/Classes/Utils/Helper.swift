@@ -9,7 +9,7 @@
 import Foundation
 import SwiftyUserDefaults
 
-class Helper {
+public class Helper {
   static func getDocumentsDirectory() -> URL {
     let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
     let documentsDirectory = paths[0]
@@ -20,7 +20,7 @@ class Helper {
     return FileManager.default.temporaryDirectory
   }
 
-  static func recordingURL(forEncounterID encounterID: String) -> URL {
+  static public func recordingURL(forEncounterID encounterID: String) -> URL {
     return Helper.getTemporaryDirectory().appendingPathComponent("recording-\(encounterID).flac")
   }
 }
