@@ -14,15 +14,21 @@ struct RecordingInfo: Equatable {
   var encounterID: String
   var userID: String
   var recordingNumber: Int
+  var token: String
   
   init(info: [String: AnyHashable]) {
     self.encounterID = info["encounterID"]?.base as! String
     self.userID = info["userID"]?.base as! String
     self.recordingNumber = 0
+    self.token = info["token"]?.base as? String ?? ""
   }
   
   mutating func incrementRecordingNumber() {
     self.recordingNumber += 1
+  }
+  
+  var uploadParams: UploadParams {
+    return UploadParams(uid: userID, encounterID: encounterID, token: token, extension: "flac")
   }
   
   static func ==(lhs: RecordingInfo, rhs: RecordingInfo) -> Bool {

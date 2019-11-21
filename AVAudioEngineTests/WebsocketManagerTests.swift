@@ -15,7 +15,7 @@ class WebsocketManagerTests: XCTestCase {
   
   override func setUp() {
     // Put setup code here. This method is called before the invocation of each test method in the class.
-    let provider = MoyaProvider<SocketAPI>(stubClosure: MoyaProvider.immediatelyStub)
+    let provider = MoyaProvider<API>(stubClosure: MoyaProvider.immediatelyStub)
     self.manager = WebsocketManager<MockSocket>(accessToken: "1234", provider: provider)
   }
 

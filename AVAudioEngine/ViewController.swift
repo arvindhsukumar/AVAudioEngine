@@ -10,6 +10,8 @@ import UIKit
 import SnapKit
 import AVFoundation
 
+fileprivate let kAccessToken = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjhhMzY5M2YxMzczZjgwYTI1M2NmYmUyMTVkMDJlZTMwNjhmZWJjMzYiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiQXJ2aW5kaCBTdWt1bWFyIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL2NsaWVudC1kZXYtZTMwMWQiLCJhdWQiOiJjbGllbnQtZGV2LWUzMDFkIiwiYXV0aF90aW1lIjoxNTc0MzIyNDczLCJ1c2VyX2lkIjoiVTN4RGZUdUQ1ZGZHdll5M3F0U0FSVTkwVldaMiIsInN1YiI6IlUzeERmVHVENWRmR3ZZeTNxdFNBUlU5MFZXWjIiLCJpYXQiOjE1NzQzMjI0NzMsImV4cCI6MTU3NDMyNjA3MywiZW1haWwiOiJhcnZpbmRoQGFicmlkZ2UuYWkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJhcnZpbmRoQGFicmlkZ2UuYWkiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.ikEdhzRDVE-iYyE79ucVQcY5zpvjPLdQzYwdgsGPczRL_nMUbffooNNUodlxFti6-XxaLn0R6UYufVVjyqKEoYsJ33DAt7pPlgKj4giGsFTCbiJB2GgrqF1E6ua6asXNmA-9pt6gIgTCPCCIpK43UdZbh13gLVgwshUuM2IE9KkHrXzhroSct1V7eHYj3T3M_Pg5Vhpeg1uYw6qgGO-jOXCCpOLAqPwPwHKpgtOPYbjn_l4fORxxTKFfdAfGKlS6RqG38cb_u0iQYJRuJ6pQtz-1r0xSEEEi6tV17vDdJYBfofk1fDlME1b9mplWZfqAnYYVtedlCf29ql_pU8AoOQ"
+
 class ViewController: UIViewController {
   let button: UIButton = {
     let button = UIButton(type: UIButton.ButtonType.system)
@@ -139,7 +141,7 @@ class ViewController: UIViewController {
       }      
     }
     else {
-      manager.prepareRecording(["encounterID": "3", "userID": "arvindh@abridge.com"])
+      manager.prepareRecording(["encounterID": "1", "userID": "U3xDfTuD5dfGvYy3qtSARU90VWZ2", "token": kAccessToken])
       manager.startRecording()
       button.setTitle("Pause", for: UIControl.State.normal)
     }

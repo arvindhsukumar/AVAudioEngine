@@ -19,12 +19,10 @@ class WebsocketManager<S: NSObject>: NSObject where S: Socket {
   var onStop: WebsocketOnClose? // For when user stops recording
   var onClose: WebsocketOnClose? // For when websocket is closed for _any_ reason
   var onMessage: WebsocketOnMessage?
-  var accessToken: String
   var currentRecordingInfo: RecordingInfo?
   var firstAck: Ack?
   
-  init(accessToken: String) {
-    self.accessToken = accessToken
+  override init() {
     super.init()
   }
   
@@ -48,10 +46,14 @@ class WebsocketManager<S: NSObject>: NSObject where S: Socket {
   }
   
   @objc func createSocket() {
+    guard let recordingInfo = currentRecordingInfo else {
+      return
+    }
+    
     let url = websocketURL(isWS: false).appendingPathComponent("streaming")
 
     var request = URLRequest(url: url)
-    request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+    request.setValue("Bearer \(recordingInfo.token)", forHTTPHeaderField: "Authorization")
 
     socket = S.make(request: request, protocols: ["chat", "superchat"])
     socket?.onConnect = {
