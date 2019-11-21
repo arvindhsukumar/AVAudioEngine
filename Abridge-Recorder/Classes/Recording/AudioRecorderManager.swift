@@ -12,8 +12,8 @@ import SwiftyUserDefaults
 import Starscream
 import Reachability
 
-@objc(RecordingManager)
-public class RecordingManager: NSObject {
+@objc(AudioRecorderManager)
+public class AudioRecorderManager: NSObject {
   public var recorder: Recorder!
   public var websocketManager: WebsocketManager<WebSocket>!
   public var uploadManager: UploadManager! = UploadManager()
@@ -35,8 +35,8 @@ public class RecordingManager: NSObject {
   
   public var currentRecordingInfo: RecordingInfo?
   
-  public static let shared: RecordingManager = {
-    let manager = RecordingManager()
+  public static let shared: AudioRecorderManager = {
+    let manager = AudioRecorderManager()
     return manager
   }()
   

@@ -10,6 +10,7 @@ import UIKit
 import SnapKit
 import AVFoundation
 import Abridge_Recorder
+
 fileprivate let kAccessToken = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjhhMzY5M2YxMzczZjgwYTI1M2NmYmUyMTVkMDJlZTMwNjhmZWJjMzYiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiQXJ2aW5kaCBTdWt1bWFyIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL2NsaWVudC1kZXYtZTMwMWQiLCJhdWQiOiJjbGllbnQtZGV2LWUzMDFkIiwiYXV0aF90aW1lIjoxNTc0MzI5MzQ5LCJ1c2VyX2lkIjoiVTN4RGZUdUQ1ZGZHdll5M3F0U0FSVTkwVldaMiIsInN1YiI6IlUzeERmVHVENWRmR3ZZeTNxdFNBUlU5MFZXWjIiLCJpYXQiOjE1NzQzMjkzNDksImV4cCI6MTU3NDMzMjk0OSwiZW1haWwiOiJhcnZpbmRoQGFicmlkZ2UuYWkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJhcnZpbmRoQGFicmlkZ2UuYWkiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.kJxFoh8fOLfPggjFBJTANlCjMCWOlMbf2p-D9ZtIaIL7IbrXJPOCD-U__WtqIXAX17_OFyt9yU7BCCoWHiQ1IBfB8ed0WFJx8uBvvkG-_nGz7i1ls1u-ONVxFw0sNtzt-0_m9U-aP_AT69RsRm69yiPj4EGLwNxrD_Qr1UAtvdIF4AORV4D9jCNLdxBrq6h7vM5ru8FUnjbHtPuNfATPNhGjV6FjUvui-uiwMLw31OXpXKkuJH3J7mQZxXb-S4TQz6TzzKosYhzpNFMqsZYbrWupw9O8TlpuP5wffC9zj5UHq2jiKLybAVEWOR3Qg_RfOhAR6VCwzeDGxSkuz01Rrg"
 
 class ViewController: UIViewController {
@@ -121,15 +122,15 @@ class ViewController: UIViewController {
   }
   
   func setupRecordingManager() {
-    RecordingManager.shared
+    AudioRecorderManager.shared
   }
   
   @objc func stopRecording() {
-    RecordingManager.shared.stopRecording()
+    AudioRecorderManager.shared.stopRecording()
   }
 
   @objc func toggleRecording() {
-    let manager = RecordingManager.shared
+    let manager = AudioRecorderManager.shared
     if manager.isRecording {
       if button.currentTitle == "Pause" {
         manager.pauseRecording()
