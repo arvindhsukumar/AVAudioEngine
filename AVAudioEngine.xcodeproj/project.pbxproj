@@ -21,6 +21,7 @@
 		65FADC5A22DDBED20026F5E0 /* AVAudioEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FADC5922DDBED20026F5E0 /* AVAudioEngineTests.swift */; };
 		65FADC6522DDBED20026F5E0 /* AVAudioEngineUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FADC6422DDBED20026F5E0 /* AVAudioEngineUITests.swift */; };
 		D402404323605AAA0005BF44 /* RecordingManagerBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = D402404223605AAA0005BF44 /* RecordingManagerBridge.m */; };
+		D410206923866BA400166BCB /* UploadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D410206823866BA400166BCB /* UploadManager.swift */; };
 		D414A988237D690C00C4EB80 /* Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = D414A987237D690C00C4EB80 /* Upload.swift */; };
 		D450B04A23632E0400D77965 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = D450B04923632E0400D77965 /* Protocols.swift */; };
 		D450B04C23632F2300D77965 /* MockSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = D450B04B23632F2300D77965 /* MockSocket.swift */; };
@@ -85,6 +86,7 @@
 		C287FDE882BDBDCB95048140 /* Pods-AVAudioEngineUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AVAudioEngineUITests.debug.xcconfig"; path = "Target Support Files/Pods-AVAudioEngineUITests/Pods-AVAudioEngineUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		D133BD10C5E5F56769DEAC91 /* Pods-AVAudioEngine.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AVAudioEngine.debug.xcconfig"; path = "Target Support Files/Pods-AVAudioEngine/Pods-AVAudioEngine.debug.xcconfig"; sourceTree = "<group>"; };
 		D402404223605AAA0005BF44 /* RecordingManagerBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RecordingManagerBridge.m; sourceTree = "<group>"; };
+		D410206823866BA400166BCB /* UploadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadManager.swift; sourceTree = "<group>"; };
 		D414A987237D690C00C4EB80 /* Upload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upload.swift; sourceTree = "<group>"; };
 		D450B04923632E0400D77965 /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		D450B04B23632F2300D77965 /* MockSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSocket.swift; sourceTree = "<group>"; };
@@ -193,6 +195,7 @@
 				D450B04923632E0400D77965 /* Protocols.swift */,
 				D4A180082368411E00F51426 /* SocketAPI.swift */,
 				D414A987237D690C00C4EB80 /* Upload.swift */,
+				D410206823866BA400166BCB /* UploadManager.swift */,
 			);
 			path = AVAudioEngine;
 			sourceTree = "<group>";
@@ -464,6 +467,7 @@
 				D4AB71DB23572AA10016251A /* RecordingManager.swift in Sources */,
 				65FADC4722DDBED10026F5E0 /* ViewController.swift in Sources */,
 				D450B04A23632E0400D77965 /* Protocols.swift in Sources */,
+				D410206923866BA400166BCB /* UploadManager.swift in Sources */,
 				D456977F232BCC7100766183 /* WebsocketManager.swift in Sources */,
 				D4A180092368411E00F51426 /* SocketAPI.swift in Sources */,
 				D414A988237D690C00C4EB80 /* Upload.swift in Sources */,

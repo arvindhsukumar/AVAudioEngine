@@ -31,15 +31,18 @@ func websocketURL(isWS: Bool) -> URL {
   return urlComponents.url!
 }
 
-enum SocketAPI {
-  case upload(params: UploadParams)
+enum API {
+  case getUploadURL(params: UploadParams)
+  case upload(params: UploadParams, uploadResponse: UploadResponse)
 }
 
-extension SocketAPI: TargetType {
+extension API: TargetType {
   var baseURL: URL {
     switch self {
-    case .upload(_):
+    case .getUploadURL(_):
       return URL(string: "https://upload-service-dot-client-dev-e301d.appspot.com")!
+    case .upload(_, let response):
+      return URL(string: response.urlString)!
     default:
       return websocketURL(isWS: false)
     }
@@ -47,42 +50,50 @@ extension SocketAPI: TargetType {
   
   var path: String {
     switch self {
-    case .upload(_): return "/upload"
+    case .getUploadURL(_): return "/upload"
+    case .upload(_, _): return ""
     }
   }
   
   var method: Moya.Method {
     switch self {
-    case .upload(_): return .post
+    case .getUploadURL(_): return .get
+    case .upload(_, _): return .post
     }
   }
   
   var sampleData: Data {
     switch self {
-    case .upload(_): return "".data(using: String.Encoding.utf8)!
+    case .getUploadURL(_): return "".data(using: String.Encoding.utf8)!
+    case .upload(_, _): return "".data(using: String.Encoding.utf8)!
     }
   }
   
   var task: Task {
     switch self {
-    case .upload(let params):
-      let formData = [
-        MultipartFormData(provider: MultipartFormData.FormDataProvider.file(params.url), name: "AVAudioEngineTest")
-      ]
-      
+    case .getUploadURL(let params):
       let urlParams = [
         "uid": params.uid,
         "uuid": params.encounterID,
         "ext": params.extension
       ]
       
-      return Task.uploadCompositeMultipart(formData, urlParameters: urlParams)
+      return Task.requestParameters(parameters: urlParams, encoding: URLEncoding.default)
+    case .upload(let params, _):
+      return Task.uploadFile(params.fileURL)
     default:
       break
     }
   }
   
   var headers: [String : String]? {
-    return nil
+    switch self {
+    case .getUploadURL(let params):
+      return ["token": params.token]
+    case .upload(let params, _):
+      return ["token": params.token]
+    default:
+      return nil
+    }
   }
 }

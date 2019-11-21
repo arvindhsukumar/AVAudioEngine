@@ -12,11 +12,11 @@ import SwiftyUserDefaults
 import Starscream
 import Reachability
 
-
 @objc(RecordingManager)
 class RecordingManager: NSObject {
   var recorder: Recorder!
   var websocketManager: WebsocketManager<WebSocket>!
+  var uploadManager: UploadManager! = UploadManager()
   var reachability: Reachability!
   var readFileHandle: FileHandle?
 
@@ -114,7 +114,6 @@ class RecordingManager: NSObject {
     websocketManager.onMessage = {
       [weak self] text in
       
-      
     }
     
     websocketManager.onClose = {
@@ -206,8 +205,16 @@ class RecordingManager: NSObject {
     readFileHandle?.readabilityHandler = nil
     websocketManager.stop {
       [weak self] (_) in
-      self?.recorder.stopRecording()
-      self?.currentRecordingInfo = nil
+      guard let this = self else {
+        return
+      }
+      
+      this.recorder.stopRecording()
+      this.currentRecordingInfo = nil
+      
+      if this.wasConnectionInterrupted {
+        this.uploadFile()
+      }
       
       // TODO: Cleanup stored data from UserDefaults
     }
@@ -226,5 +233,22 @@ class RecordingManager: NSObject {
       
       completion()
     }
+  }
+  
+  func uploadFile() {
+    guard let recordingInfo = self.currentRecordingInfo else {
+      return
+    }
+    
+    uploadManager.upload(
+      params: recordingInfo.uploadParams,
+      progress: {
+        [weak self] (progress) in
+        
+      },
+      completion: {
+        [weak self] error in
+      }
+    )
   }
 }
