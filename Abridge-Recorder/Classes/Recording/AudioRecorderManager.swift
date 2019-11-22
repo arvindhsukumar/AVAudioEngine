@@ -301,7 +301,6 @@ extension AudioRecorderManager {
       timer = RepeatingTimer(timeInterval: 1)
       timer?.eventHandler = {
         [weak self] timeinterval in
-        self?.stopwatch.increment(time: timeinterval)
         self?.sendProgressUpdate()
       }
     }

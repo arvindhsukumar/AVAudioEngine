@@ -8,7 +8,14 @@
 import Foundation
 
 class Stopwatch {
-  var timeElapsed: TimeInterval = 0
+  var startTime: Date?
+  var timeElapsed: TimeInterval {
+    guard let startTime = startTime else {
+      return 0
+    }
+    
+    return Date().timeIntervalSince(startTime)
+  }
   var isRunning: Bool = false
 
   func start() {
@@ -16,16 +23,12 @@ class Stopwatch {
       return
     }
     
-    timeElapsed = 0
+    startTime = Date()
     isRunning = true
   }
     
   func stop() {
-    timeElapsed = 0
+    startTime = nil
     isRunning = false
-  }
-  
-  func increment(time: TimeInterval) {
-    timeElapsed += time
-  }
+  }  
 }
