@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import <React/RCTBridgeModule.h>
+#import <React/RCTEventEmitter.h>
 
-@interface RCT_EXTERN_MODULE(AudioRecorderManager, NSObject)
+@interface RCT_EXTERN_MODULE(AudioRecorderManager, RCTEventEmitter)
 
 RCT_EXTERN_METHOD(prepareRecording:(NSDictionary *)info)
 RCT_EXTERN_METHOD(startRecording)

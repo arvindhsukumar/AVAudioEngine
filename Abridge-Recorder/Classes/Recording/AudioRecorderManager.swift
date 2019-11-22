@@ -11,9 +11,21 @@ import AVFoundation
 import SwiftyUserDefaults
 import Starscream
 import Reachability
+import React
+
+fileprivate enum Event: String {
+  case recordingInterruptionStatusChanged = "interruptionStatusChanged"
+  case recordingProgress = "recordingProgress"
+  case recordingFinished = "recordingFinished"
+  
+  static var supportedEvents: [String] {
+    let array: [Event] = [.recordingInterruptionStatusChanged, .recordingFinished, .recordingProgress]
+    return array.map {$0.rawValue}
+  }
+}
 
 @objc(AudioRecorderManager)
-public class AudioRecorderManager: NSObject {
+public class AudioRecorderManager: RCTEventEmitter {
   public var recorder: Recorder!
   public var websocketManager: WebsocketManager<WebSocket>!
   public var uploadManager: UploadManager! = UploadManager()
@@ -24,7 +36,9 @@ public class AudioRecorderManager: NSObject {
   public var isAudioInterrupted: Bool = false
   public var isConnectionInterrupted: Bool = false
   public var wasConnectionInterrupted: Bool = false
-
+  var timer: RepeatingTimer?
+  var stopwatch: Stopwatch = Stopwatch()
+  
   public var isRecording: Bool {
     return recorder.isRecording
   }
@@ -40,6 +54,10 @@ public class AudioRecorderManager: NSObject {
     return manager
   }()
   
+  public override class func requiresMainQueueSetup() -> Bool {
+    return true
+  }
+  
   override init() {
     super.init()
     
@@ -47,6 +65,10 @@ public class AudioRecorderManager: NSObject {
     setupSession()
     setupWebsocket()
     setupRecorder()
+  }
+  
+  public override func supportedEvents() -> [String]! {
+    return Event.supportedEvents
   }
   
   func setupReachability() {
@@ -118,6 +140,11 @@ public class AudioRecorderManager: NSObject {
     @unknown default:
       fatalError()
     }
+    
+    self.sendEventIfBridgeConnected(
+      Event.recordingInterruptionStatusChanged,
+      body: ["status": interruptionType.rawValue]
+    )
   }
   
   func setupWebsocket() {
@@ -195,6 +222,7 @@ public class AudioRecorderManager: NSObject {
     
     connectAndStartWebsocket {
       [weak self] in
+      self?.startProgressTimer()
       self?.recorder.startRecording(info: info)
     }
   }
@@ -222,6 +250,7 @@ public class AudioRecorderManager: NSObject {
       }
       
       this.recorder.stopRecording()
+      this.stopProgressTimer()
       
       if this.wasConnectionInterrupted {
         this.uploadFile()
@@ -263,5 +292,52 @@ public class AudioRecorderManager: NSObject {
         [weak self] error in
       }
     )
+  }
+}
+
+extension AudioRecorderManager {
+  func startProgressTimer() {
+    if timer == nil {
+      timer = RepeatingTimer(timeInterval: 1)
+      timer?.eventHandler = {
+        [weak self] timeinterval in
+        self?.stopwatch.increment(time: timeinterval)
+        self?.sendProgressUpdate()
+      }
+    }
+    
+    stopwatch.stop()
+    stopwatch.start()
+    
+    timer?.resume()
+  }
+  
+  func stopProgressTimer() {
+    timer?.suspend()
+    stopwatch.stop()
+  }
+  
+  func sendProgressUpdate() {
+    if !isRecording {
+      return
+    }
+    
+    self.sendEventIfBridgeConnected(
+      Event.recordingProgress,
+      body: ["currentTime": NSNumber(floatLiteral: stopwatch.timeElapsed)]
+    )
+    
+    print("time elapsed: \(stopwatch.timeElapsed)")
+  }
+}
+
+extension AudioRecorderManager {
+  fileprivate func sendEventIfBridgeConnected(_ event: Event, body: [String: Any]) {
+    if let _ = bridge {
+      self.sendEvent(
+        withName: event.rawValue,
+        body: body
+      )
+    }
   }
 }
