@@ -13,13 +13,10 @@ public struct UploadParams {
   var encounterID: String
   var token: String
   var `extension`: String
-  
-  var filePath: String {
-    return fileURL.path
-  }
+  var path: String
   
   var fileURL: URL {
-    return Helper.recordingURL(forEncounterID: encounterID)
+    return URL(fileURLWithPath: path)
   }
 }
 

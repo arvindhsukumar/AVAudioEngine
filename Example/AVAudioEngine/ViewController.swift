@@ -142,34 +142,16 @@ class ViewController: UIViewController {
       }      
     }
     else {
-      manager.prepareRecording(["encounterID": "1", "userID": "U3xDfTuD5dfGvYy3qtSARU90VWZ2", "token": kAccessToken])
+      let encounterID = "1"
+      let path = Helper.recordingURL(forEncounterID: encounterID).path
+      manager.prepareRecordingAtPath(path, ["encounterID": encounterID, "userID": "U3xDfTuD5dfGvYy3qtSARU90VWZ2", "token": kAccessToken])
       manager.startRecording()
       button.setTitle("Pause", for: UIControl.State.normal)
     }
   }
   
   @objc func playRecording() {
-    let url = Helper.recordingURL(forEncounterID: "2")
-//    audioFile = try! AVAudioFile(forReading: url)
-//
-//    setupEngine()
-//
-//    playNode.scheduleFile(audioFile!, at: nil) {
-//
-//    }
-//    self.playNode.play()
-//
-//    label.text = """
-//      \(audioFormat!) \n
-//      \(audioLengthSeconds) \n
-//      \(audioLengthSamples)
-//    """
-    
-    let attributes = try! FileManager.default.attributesOfItem(atPath: url.path)
-    let fileURL = URL(fileURLWithPath: url.path)
-//    let data = try! FileManager.default.contents(atPath: url.path)
-    let activity = UIActivityViewController(activityItems: [url], applicationActivities: nil)
-    present(activity, animated: true, completion: nil)
+
   }
 }
 

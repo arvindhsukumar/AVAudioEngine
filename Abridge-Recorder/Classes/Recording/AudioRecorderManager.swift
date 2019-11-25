@@ -197,8 +197,8 @@ public class AudioRecorderManager: RCTEventEmitter {
     }
   }
   
-  @objc public func prepareRecording(_ info: [String: AnyHashable]) {
-    let info = RecordingInfo(info: info)
+  @objc public func prepareRecordingAtPath(_ path: String, _ info: [String: AnyHashable]) {
+    let info = RecordingInfo(path: path, info: info)
     if isRecording {
       // Recording already happening, but another start request came in.
       return
@@ -213,7 +213,7 @@ public class AudioRecorderManager: RCTEventEmitter {
       return
     }
     
-    let fileURL = Helper.recordingURL(forEncounterID: info.encounterID)
+    let fileURL = info.url
     try? FileManager.default.removeItem(at: fileURL)
     
     Defaults[.bytesProcessed] = [:]

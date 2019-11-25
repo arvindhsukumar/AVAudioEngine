@@ -15,8 +15,13 @@ public struct RecordingInfo: Equatable {
   public var userID: String
   public var recordingNumber: Int
   public var token: String
+  public var path: String
+  public var url: URL {
+    return URL(fileURLWithPath: path)
+  }
   
-  public init(info: [String: AnyHashable]) {
+  public init(path: String, info: [String: AnyHashable]) {
+    self.path = path
     self.encounterID = info["encounterID"]?.base as! String
     self.userID = info["userID"]?.base as! String
     self.recordingNumber = 0
@@ -28,7 +33,7 @@ public struct RecordingInfo: Equatable {
   }
   
   public var uploadParams: UploadParams {
-    return UploadParams(uid: userID, encounterID: encounterID, token: token, extension: "flac")
+    return UploadParams(uid: userID, encounterID: encounterID, token: token, extension: "flac", path: path)
   }
   
   static public func ==(lhs: RecordingInfo, rhs: RecordingInfo) -> Bool {
@@ -106,7 +111,7 @@ public class Recorder: NSObject {
     }
     
     do {
-      let fileURL = Helper.recordingURL(forEncounterID: info.encounterID)
+      let fileURL = info.url
       createFileIfNeeded()
       writeFileHandle = try FileHandle(forWritingTo: fileURL)
     }
@@ -184,7 +189,7 @@ public class Recorder: NSObject {
     }
     
     let fileManager = FileManager.default
-    let fileURL = Helper.recordingURL(forEncounterID: info.encounterID)
+    let fileURL = info.url
     let fileExists = fileManager.fileExists(atPath: fileURL.path)
     
     if !fileExists {

@@ -12,7 +12,7 @@
 
 @interface RCT_EXTERN_MODULE(AudioRecorderManager, RCTEventEmitter)
 
-RCT_EXTERN_METHOD(prepareRecording:(NSDictionary *)info)
+RCT_EXTERN_METHOD(prepareRecordingAtPath:(NSString *)path info:(NSDictionary *)info)
 RCT_EXTERN_METHOD(startRecording)
 RCT_EXTERN_METHOD(stopRecording)
 RCT_EXTERN_METHOD(pauseRecording)
