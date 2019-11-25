@@ -133,10 +133,8 @@ public class AudioRecorderManager: RCTEventEmitter {
     switch interruptionType {
     case .began:
       isAudioInterrupted = true
-      pauseRecording()
     case .ended:
       isAudioInterrupted = false
-      resumeRecording()
     @unknown default:
       fatalError()
     }
